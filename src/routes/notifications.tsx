@@ -1,126 +1,94 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AppShell, PageHeader } from "@/components/app-shell";
-import { Bell, Check, AlertCircle, Info, TrendingUp } from "lucide-react";
+import { Bell, CheckCircle2, XCircle, AlertTriangle, Info, TrendingUp, UserPlus } from "lucide-react";
+import { useStore } from "@/lib/store";
+import { useSettings } from "@/components/layout/theme";
+import { AppShell, PageHeader } from "@/components/layout/app-shell";
+import { EmptyState } from "@/components/ui";
+import { cn, fmtDateTime } from "@/lib/utils";
 
 export const Route = createFileRoute("/notifications")({
+  head: () => ({
+    meta: [
+      { title: "الإشعارات | منصة المشرق" },
+      { name: "description", content: "جميع إشعارات وتنبيهات المنصة." },
+    ],
+  }),
   component: NotificationsPage,
 });
 
+function getIcon(title: string, body: string) {
+  const t = (title + " " + body).toLowerCase();
+  if (t.includes("اعتماد") || t.includes("approved") || t.includes("إيداع") || t.includes("deposit")) return { icon: CheckCircle2, color: "text-success", bg: "bg-success/10" };
+  if (t.includes("رفض") || t.includes("rejected") || t.includes("reject")) return { icon: XCircle, color: "text-destructive", bg: "bg-destructive/10" };
+  if (t.includes("ربح") || t.includes("profit") || t.includes("return")) return { icon: TrendingUp, color: "text-gold", bg: "bg-gold/10" };
+  if (t.includes("تحذير") || t.includes("warning") || t.includes("تنبيه")) return { icon: AlertTriangle, color: "text-warning", bg: "bg-warning/10" };
+  if (t.includes("ترقية") || t.includes("upgrade") || t.includes("باقة") || t.includes("package")) return { icon: TrendingUp, color: "text-emerald", bg: "bg-emerald/10" };
+  if (t.includes("جديد") || t.includes("new") || t.includes("مستخدم") || t.includes("user")) return { icon: UserPlus, color: "text-blue-400", bg: "bg-blue-400/10" };
+  return { icon: Bell, color: "text-accent", bg: "bg-accent/10" };
+}
+
 function NotificationsPage() {
-  const notifications = [
-    {
-      id: 1,
-      type: "success",
-      title: "تم تأكيد الإيداع",
-      description: "تم إيداع 500 ريال في محفظتك بنجاح",
-      time: "منذ 2 ساعة",
-      icon: Check,
-      color: "bg-success/10 border-success/20",
-      iconColor: "text-success",
-    },
-    {
-      id: 2,
-      type: "alert",
-      title: "جديد: عرض خاص",
-      description: "احصل على 50% إضافي على كل عملية إيداع",
-      time: "منذ 4 ساعات",
-      icon: TrendingUp,
-      color: "bg-gold/10 border-gold/20",
-      iconColor: "text-gold",
-    },
-    {
-      id: 3,
-      type: "info",
-      title: "تحديث الأمان",
-      description: "يُرجى تحديث كلمة المرور الخاصة بك",
-      time: "منذ يوم",
-      icon: Info,
-      color: "bg-accent/10 border-accent/20",
-      iconColor: "text-accent",
-    },
-    {
-      id: 4,
-      type: "warning",
-      title: "انتهاء الباقة",
-      description: "سينتهي اشتراكك في الباقة الذهبية خلال 3 أيام",
-      time: "منذ يومين",
-      icon: AlertCircle,
-      color: "bg-warning/10 border-warning/20",
-      iconColor: "text-warning",
-    },
-    {
-      id: 5,
-      type: "success",
-      title: "سحب موافق عليه",
-      description: "تمت الموافقة على طلب السحب برقم #54321",
-      time: "منذ 3 أيام",
-      icon: Check,
-      color: "bg-success/10 border-success/20",
-      iconColor: "text-success",
-    },
-    {
-      id: 6,
-      type: "info",
-      title: "جديد: ميزة الإحالة",
-      description: "قم بدعوة الأصدقاء واحصل على عمولة على أرباحهم",
-      time: "منذ أسبوع",
-      icon: Bell,
-      color: "bg-accent/10 border-accent/20",
-      iconColor: "text-accent",
-    },
-  ];
+  const { notifications, user } = useStore();
+  const { lang } = useSettings();
+
+  if (!user) return null;
+
+  const userNotifications = notifications.filter((n) => n.userId === "all" || n.userId === user.id);
+  const unread = userNotifications.filter((n) => !n.read).length;
 
   return (
     <AppShell>
       <PageHeader
-        title="الإشعارات"
-        subtitle="تابع جميع تحديثاتك وعملياتك الأخيرة"
+        title={lang === "ar" ? "الإشعارات" : "Notifications"}
+        subtitle={
+          lang === "ar"
+            ? `لديك ${unread} إشعار غير مقروء`
+            : `You have ${unread} unread notification${unread !== 1 ? "s" : ""}`
+        }
       />
 
-      {/* Notifications List */}
-      <div className="grid gap-3 sm:gap-4">
-        {notifications.map((notification) => {
-          const Icon = notification.icon;
-          return (
-            <div
-              key={notification.id}
-              className={`glass rounded-2xl p-4 sm:p-5 border transition-all duration-300 hover:border-gold/40 ${notification.color} group cursor-pointer`}
-            >
-              <div className="flex gap-4">
-                <div
-                  className={`mt-1 rounded-lg p-2.5 ${notification.color} ${notification.iconColor}`}
-                >
-                  <Icon className="h-5 w-5" />
+      {userNotifications.length === 0 ? (
+        <EmptyState
+          icon={<Bell className="h-8 w-8" />}
+          title={lang === "ar" ? "لا توجد إشعارات" : "No notifications"}
+          body={lang === "ar" ? "ستظهر الإشعارات الجديدة هنا" : "New notifications will appear here"}
+        />
+      ) : (
+        <div className="grid gap-3">
+          {userNotifications.map((n) => {
+            const { icon: Icon, color, bg } = getIcon(n.title, n.body);
+            return (
+              <div
+                key={n.id}
+                className={cn(
+                  "glass rounded-2xl border p-5 transition-all duration-300 hover:border-gold/40",
+                  n.read ? "border-border/40" : "border-gold/20",
+                )}
+              >
+                <div className="flex gap-4">
+                  <div className={cn("shrink-0 rounded-xl p-2.5", bg)}>
+                    <Icon className={cn("h-5 w-5", color)} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <h3 className={cn("text-sm font-semibold", n.read ? "text-muted-foreground" : "text-ivory")}>
+                          {n.title}
+                        </h3>
+                        <p className={cn("mt-1 text-xs leading-6", n.read ? "text-muted-foreground/60" : "text-muted-foreground")}>
+                          {n.body}
+                        </p>
+                      </div>
+                      {!n.read && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-gold shadow-[0_0_8px_rgba(212,175,55,0.6)]" />}
+                    </div>
+                    <p className="mt-2 text-[11px] text-muted-foreground/60">{fmtDateTime(n.createdAt)}</p>
+                  </div>
                 </div>
-
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-ivory text-sm sm:text-base group-hover:text-gold transition-colors">
-                    {notification.title}
-                  </h3>
-                  <p className="text-muted-foreground text-xs sm:text-sm mt-1 line-clamp-2">
-                    {notification.description}
-                  </p>
-                  <p className="text-muted-foreground/60 text-xs mt-2">
-                    {notification.time}
-                  </p>
-                </div>
-
-                <div className="flex-shrink-0 h-2 w-2 rounded-full bg-gold/60 mt-2 group-hover:scale-150 transition-transform" />
               </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Empty state placeholder */}
-      <div className="mt-8 text-center py-12">
-        <div className="mx-auto w-16 h-16 rounded-full glass flex items-center justify-center mb-4">
-          <Bell className="h-8 w-8 text-muted-foreground" />
+            );
+          })}
         </div>
-        <p className="text-muted-foreground">
-          ستظهر الإشعارات الجديدة هنا
-        </p>
-      </div>
+      )}
     </AppShell>
   );
 }

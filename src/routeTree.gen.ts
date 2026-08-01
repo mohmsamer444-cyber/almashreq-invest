@@ -13,12 +13,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as DepositRequestRouteImport } from './routes/deposit-request'
+import { Route as InvestRouteImport } from './routes/invest'
 import { Route as NotificationsRouteImport } from './routes/notifications'
-import { Route as PlansRouteImport } from './routes/plans'
-import { Route as RequestsRouteImport } from './routes/requests'
-import { Route as WithdrawalRequestRouteImport } from './routes/withdrawal-request'
+import { Route as TransfersRouteImport } from './routes/transfers'
+import { Route as WalletRouteImport } from './routes/wallet'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,14 +38,9 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DepositRequestRoute = DepositRequestRouteImport.update({
-  id: '/deposit-request',
-  path: '/deposit-request',
+const InvestRoute = InvestRouteImport.update({
+  id: '/invest',
+  path: '/invest',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotificationsRoute = NotificationsRouteImport.update({
@@ -55,19 +48,14 @@ const NotificationsRoute = NotificationsRouteImport.update({
   path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PlansRoute = PlansRouteImport.update({
-  id: '/plans',
-  path: '/plans',
+const TransfersRoute = TransfersRouteImport.update({
+  id: '/transfers',
+  path: '/transfers',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RequestsRoute = RequestsRouteImport.update({
-  id: '/requests',
-  path: '/requests',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WithdrawalRequestRoute = WithdrawalRequestRouteImport.update({
-  id: '/withdrawal-request',
-  path: '/withdrawal-request',
+const WalletRoute = WalletRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -76,24 +64,20 @@ export interface FileRoutesByFullPath {
   '/account': typeof AccountRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/dashboard': typeof DashboardRoute
-  '/deposit-request': typeof DepositRequestRoute
+  '/invest': typeof InvestRoute
   '/notifications': typeof NotificationsRoute
-  '/plans': typeof PlansRoute
-  '/requests': typeof RequestsRoute
-  '/withdrawal-request': typeof WithdrawalRequestRoute
+  '/transfers': typeof TransfersRoute
+  '/wallet': typeof WalletRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/dashboard': typeof DashboardRoute
-  '/deposit-request': typeof DepositRequestRoute
+  '/invest': typeof InvestRoute
   '/notifications': typeof NotificationsRoute
-  '/plans': typeof PlansRoute
-  '/requests': typeof RequestsRoute
-  '/withdrawal-request': typeof WithdrawalRequestRoute
+  '/transfers': typeof TransfersRoute
+  '/wallet': typeof WalletRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -101,12 +85,10 @@ export interface FileRoutesById {
   '/account': typeof AccountRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/dashboard': typeof DashboardRoute
-  '/deposit-request': typeof DepositRequestRoute
+  '/invest': typeof InvestRoute
   '/notifications': typeof NotificationsRoute
-  '/plans': typeof PlansRoute
-  '/requests': typeof RequestsRoute
-  '/withdrawal-request': typeof WithdrawalRequestRoute
+  '/transfers': typeof TransfersRoute
+  '/wallet': typeof WalletRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -115,36 +97,30 @@ export interface FileRouteTypes {
     | '/account'
     | '/admin'
     | '/auth'
-    | '/dashboard'
-    | '/deposit-request'
+    | '/invest'
     | '/notifications'
-    | '/plans'
-    | '/requests'
-    | '/withdrawal-request'
+    | '/transfers'
+    | '/wallet'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/account'
     | '/admin'
     | '/auth'
-    | '/dashboard'
-    | '/deposit-request'
+    | '/invest'
     | '/notifications'
-    | '/plans'
-    | '/requests'
-    | '/withdrawal-request'
+    | '/transfers'
+    | '/wallet'
   id:
     | '__root__'
     | '/'
     | '/account'
     | '/admin'
     | '/auth'
-    | '/dashboard'
-    | '/deposit-request'
+    | '/invest'
     | '/notifications'
-    | '/plans'
-    | '/requests'
-    | '/withdrawal-request'
+    | '/transfers'
+    | '/wallet'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -152,12 +128,10 @@ export interface RootRouteChildren {
   AccountRoute: typeof AccountRoute
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
-  DashboardRoute: typeof DashboardRoute
-  DepositRequestRoute: typeof DepositRequestRoute
+  InvestRoute: typeof InvestRoute
   NotificationsRoute: typeof NotificationsRoute
-  PlansRoute: typeof PlansRoute
-  RequestsRoute: typeof RequestsRoute
-  WithdrawalRequestRoute: typeof WithdrawalRequestRoute
+  TransfersRoute: typeof TransfersRoute
+  WalletRoute: typeof WalletRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -190,18 +164,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/deposit-request': {
-      id: '/deposit-request'
-      path: '/deposit-request'
-      fullPath: '/deposit-request'
-      preLoaderRoute: typeof DepositRequestRouteImport
+    '/invest': {
+      id: '/invest'
+      path: '/invest'
+      fullPath: '/invest'
+      preLoaderRoute: typeof InvestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notifications': {
@@ -211,25 +178,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/plans': {
-      id: '/plans'
-      path: '/plans'
-      fullPath: '/plans'
-      preLoaderRoute: typeof PlansRouteImport
+    '/transfers': {
+      id: '/transfers'
+      path: '/transfers'
+      fullPath: '/transfers'
+      preLoaderRoute: typeof TransfersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/requests': {
-      id: '/requests'
-      path: '/requests'
-      fullPath: '/requests'
-      preLoaderRoute: typeof RequestsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/withdrawal-request': {
-      id: '/withdrawal-request'
-      path: '/withdrawal-request'
-      fullPath: '/withdrawal-request'
-      preLoaderRoute: typeof WithdrawalRequestRouteImport
+    '/wallet': {
+      id: '/wallet'
+      path: '/wallet'
+      fullPath: '/wallet'
+      preLoaderRoute: typeof WalletRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -240,12 +200,10 @@ const rootRouteChildren: RootRouteChildren = {
   AccountRoute: AccountRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
-  DashboardRoute: DashboardRoute,
-  DepositRequestRoute: DepositRequestRoute,
+  InvestRoute: InvestRoute,
   NotificationsRoute: NotificationsRoute,
-  PlansRoute: PlansRoute,
-  RequestsRoute: RequestsRoute,
-  WithdrawalRequestRoute: WithdrawalRequestRoute,
+  TransfersRoute: TransfersRoute,
+  WalletRoute: WalletRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

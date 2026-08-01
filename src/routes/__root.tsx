@@ -3,36 +3,31 @@ import {
   Outlet,
   Link,
   createRootRouteWithContext,
-  useRouter,
+  useNavigate,
   HeadContent,
   Scripts,
-  useNavigate,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
-import { DemoProvider, useDemo } from "@/lib/demo";
-import { CinematicBackdrop } from "@/components/cinematic";
-import { Toaster } from "@/components/ui/sonner";
+import { StoreProvider, useStore } from "@/lib/store";
+import { SettingsProvider, useSettings } from "@/components/layout/theme";
+import { Toaster } from "sonner";
 
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="font-display text-7xl text-gold-gradient">٤٠٤</h1>
+        <h1 className="font-display text-8xl font-bold text-gold-gradient">٤٠٤</h1>
         <h2 className="mt-4 font-display text-xl text-ivory">الصفحة غير موجودة</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          الرابط الذي تبحث عنه غير متاح أو تم نقله.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/auth"
-            className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-          >
-            العودة للدخول
-          </Link>
-        </div>
+        <p className="mt-2 text-sm text-muted-foreground">الرابط الذي تبحث عنه غير متاح أو تم نقله.</p>
+        <Link
+          to="/"
+          className="mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold text-graphite"
+          style={{ backgroundImage: "var(--gradient-gold)" }}
+        >
+          العودة للرئيسية
+        </Link>
       </div>
     </div>
   );
@@ -40,30 +35,18 @@ function NotFoundComponent() {
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
-  const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
-
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
         <h1 className="font-display text-xl text-ivory">تعذّر تحميل الصفحة</h1>
-        <p className="mt-2 text-sm text-muted-foreground">حدث خطأ غير متوقع، جرّب التحديث.</p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
-            className="rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground"
-          >
-            إعادة المحاولة
-          </button>
-          <a href="/auth" className="rounded-full border border-border px-5 py-2.5 text-sm text-foreground">
-            تسجيل الدخول
-          </a>
-        </div>
+        <p className="mt-2 text-sm text-muted-foreground">حدث خطأ غير متوقع، جرّب إعادة المحاولة.</p>
+        <button
+          onClick={reset}
+          className="mt-6 rounded-full px-6 py-3 text-sm font-semibold text-graphite"
+          style={{ backgroundImage: "var(--gradient-gold)" }}
+        >
+          إعادة المحاولة
+        </button>
       </div>
     </div>
   );
@@ -75,11 +58,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { title: "منصة المشرق | Al-Mashreq Platform" },
-      { name: "description", content: "منصة المشرق — بيئة عرض تجريبية فاخرة لإدارة المحافظ والباقات الاستثمارية." },
-      { name: "author", content: "Al-Mashreq" },
+      { name: "description", content: "منصة المشرق — منصة متكاملة لإدارة المحافظ الاستثمارية بتجربة فاخرة." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "theme-color", content: "#0d0d0f" },
+      { name: "theme-color", content: "#101014" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -89,7 +70,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
   shellComponent: RootShell,
@@ -113,20 +93,24 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function AuthGuard({ children }: { children: ReactNode }) {
-  const { user } = useDemo();
+  const { user } = useStore();
   const navigate = useNavigate();
   const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
 
+  const isAuthPage = pathname === "/auth";
+
   useEffect(() => {
-    // If not logged in and not on the auth page, redirect to auth
-    if (!user && pathname !== "/auth") {
+    if (!user && !isAuthPage) {
       navigate({ to: "/auth" });
     }
-  }, [user, pathname, navigate]);
+  }, [user, isAuthPage, navigate]);
 
-  // If not logged in and not on auth page, show loading (redirecting)
-  if (!user && pathname !== "/auth") {
-    return null;
+  if (!user && !isAuthPage) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="skeleton h-8 w-48 rounded-full" />
+      </div>
+    );
   }
 
   return <>{children}</>;
@@ -137,13 +121,15 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <DemoProvider>
-        <AuthGuard>
-          <CinematicBackdrop />
-          <Outlet />
-          <Toaster position="top-center" richColors />
-        </AuthGuard>
-      </DemoProvider>
+      <StoreProvider>
+        <SettingsProvider>
+          <AuthGuard>
+            <Outlet />
+            <Toaster position="top-center" richColors />
+          </AuthGuard>
+        </SettingsProvider>
+      </StoreProvider>
     </QueryClientProvider>
   );
 }
+
