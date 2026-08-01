@@ -122,14 +122,12 @@ function AuthGuard({ children }: { children: ReactNode }) {
     if (!user && pathname !== "/auth") {
       navigate({ to: "/auth" });
     }
-    // If logged in and on the auth page, redirect to dashboard
-    if (user && pathname === "/auth") {
-      navigate({ to: "/dashboard" });
-    }
   }, [user, pathname, navigate]);
 
-  // If not logged in and not on auth page, show nothing (redirecting)
-  if (!user && pathname !== "/auth") return null;
+  // If not logged in and not on auth page, show loading (redirecting)
+  if (!user && pathname !== "/auth") {
+    return null;
+  }
 
   return <>{children}</>;
 }

@@ -19,6 +19,7 @@ import {
 import { Counter, DemoRibbon, Logo, Reveal, Typing } from "@/components/cinematic";
 import { PLANS, fmt } from "@/lib/demo";
 import { TestimonialsSection } from "@/components/testimonials";
+import { AppShell, PageHeader } from "@/components/app-shell";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,7 +37,11 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  component: Landing,
+  component: () => (
+    <AppShell>
+      <Landing />
+    </AppShell>
+  ),
 });
 
 const SECTIONS = [
