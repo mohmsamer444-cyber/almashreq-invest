@@ -2,10 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell, PageHeader } from "@/components/app-shell";
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { FormField, Input, TextArea, SelectButton, Button } from "@/components/ui/form";
+import { FormField, Input, TextArea, Button } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check, ArrowRight, Clock, CheckCircle, XCircle } from "lucide-react";
-import { useDemo } from "@/lib/demo";
+import { Check, ArrowRight, Clock, CheckCircle, Loader2 } from "lucide-react";
+import { useDemo, PAYMENT_METHODS, fmt, fmtDate } from "@/lib/demo";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/withdrawal-request")({
   component: WithdrawalRequestPage,
@@ -13,84 +14,65 @@ export const Route = createFileRoute("/withdrawal-request")({
 
 function WithdrawalRequestPage() {
   const navigate = useNavigate();
-  const { user } = useDemo();
+  const { user, submitRequest, requests } = useDemo();
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: user?.name || "",
+    fullName: user?.fullName || "",
     phone: user?.phone || "",
     amount: "",
-    withdrawalMethod: "vodafone",
+    withdrawalMethod: "فودافون كاش",
+    destinationAccount: "",
     notes: "",
   });
 
-  const withdrawalMethods = [
-    { id: "vodafone", label: "📱 فودافون", icon: "📱" },
-    { id: "orange", label: "🟠 أورانج", icon: "🟠" },
-    { id: "etisalat", label: "📲 اتصالات", icon: "📲" },
-    { id: "we-pay", label: "💳 WE Pay", icon: "💳" },
-    { id: "instapay", label: "✨ InstaPay", icon: "✨" },
-    { id: "bank", label: "🏦 تحويل بنكي", icon: "🏦" },
-  ];
-
-  const withdrawalHistory = [
-    {
-      id: 1,
-      amount: 500,
-      method: "فودافون",
-      date: "2024-12-15",
-      status: "completed",
-      statusAr: "مكتمل",
-    },
-    {
-      id: 2,
-      amount: 1000,
-      method: "أورانج",
-      date: "2024-12-10",
-      status: "completed",
-      statusAr: "مكتمل",
-    },
-    {
-      id: 3,
-      amount: 250,
-      method: "اتصالات",
-      date: "2024-12-08",
-      status: "pending",
-      statusAr: "قيد المراجعة",
-    },
-    {
-      id: 4,
-      amount: 750,
-      method: "WE Pay",
-      date: "2024-12-05",
-      status: "completed",
-      statusAr: "مكتمل",
-    },
-  ];
+  const myWithdrawals = requests.filter((r) => r.kind === "withdraw" && r.userId === user?.id).slice(0, 4);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Validation
-    if (!formData.fullName || !formData.phone || !formData.amount) {
-      alert("الرجاء ملء جميع الحقول المطلوبة");
+    if (!formData.fullName.trim()) {
+      toast.error("الرجاء إدخال الاسم بالكامل");
+      return;
+    }
+    if (!formData.phone.trim()) {
+      toast.error("الرجاء إدخال رقم الهاتف");
+      return;
+    }
+    if (!formData.amount) {
+      toast.error("الرجاء إدخال المبلغ المطلوب");
+      return;
+    }
+    if (!formData.destinationAccount.trim()) {
+      toast.error("الرجاء إدخال رقم الحساب المستلم");
       return;
     }
 
     const amountNum = parseFloat(formData.amount);
-    if (amountNum < 50) {
-      alert("الحد الأدنى للسحب هو 50 ريال");
+    if (isNaN(amountNum) || amountNum < 50) {
+      toast.error("الحد الأدنى للسحب هو 50 ج.م");
       return;
     }
 
     if (user && amountNum > user.balance) {
-      alert("الرصيد غير كافي");
+      toast.error("الرصيد غير كافٍ لهذا السحب");
       return;
     }
 
-    // Show success animation
-    setSuccess(true);
+    setLoading(true);
     setTimeout(() => {
-      navigate({ to: "/requests" });
-    }, 2500);
+      submitRequest({
+        kind: "withdraw",
+        method: formData.withdrawalMethod,
+        amount: amountNum,
+        account: formData.destinationAccount,
+        status: "pending",
+        ...(formData.notes.trim() ? { note: formData.notes.trim() } : {}),
+      });
+      setLoading(false);
+      setSuccess(true);
+      toast.success("تم إرسال طلب السحب بنجاح");
+    }, 800);
   };
 
   if (success) {
@@ -162,7 +144,7 @@ function WithdrawalRequestPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, fullName: e.target.value })
                     }
-                    disabled={!!user?.name}
+                    disabled={!!user?.fullName}
                   />
                 </FormField>
 
@@ -193,7 +175,7 @@ function WithdrawalRequestPage() {
                   <div className="relative">
                     <Input
                       type="number"
-                      placeholder="الحد الأدنى: 50 ريال"
+                      placeholder="الحد الأدنى: 50 ج.م"
                       value={formData.amount}
                       onChange={(e) =>
                         setFormData({ ...formData, amount: e.target.value })
@@ -203,12 +185,12 @@ function WithdrawalRequestPage() {
                       dir="ltr"
                     />
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
-                      ريال
+                      ج.م
                     </span>
                   </div>
                   {user && (
                     <p className="text-xs text-muted-foreground mt-2">
-                      الرصيد المتاح: {user.balance.toLocaleString("ar-EG")} ريال
+                      الرصيد المتاح: {fmt(user.balance)} ج.م
                     </p>
                   )}
                 </FormField>
@@ -216,23 +198,41 @@ function WithdrawalRequestPage() {
                 {/* Withdrawal Method */}
                 <FormField label="طريقة الاستلام" icon="🏦">
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {withdrawalMethods.map((method) => (
+                    {PAYMENT_METHODS.map((method) => (
                       <button
                         key={method.id}
                         type="button"
                         onClick={() =>
-                          setFormData({ ...formData, withdrawalMethod: method.id })
+                          setFormData({ ...formData, withdrawalMethod: method.label })
                         }
                         className={`p-3 rounded-lg border transition-all text-sm font-medium ${
-                          formData.withdrawalMethod === method.id
+                          formData.withdrawalMethod === method.label
                             ? "bg-gold/20 border-gold/40 text-gold"
                             : "border-border/50 text-muted-foreground hover:border-gold/30 hover:bg-gold/5"
                         }`}
                       >
+                        <span className="block text-xl mb-1">{method.icon}</span>
                         {method.label}
                       </button>
                     ))}
                   </div>
+                </FormField>
+
+                {/* Destination Account */}
+                <FormField
+                  label="رقم الحساب المستلم"
+                  icon="💳"
+                  error={!formData.destinationAccount ? "رقم الحساب مطلوب" : ""}
+                >
+                  <Input
+                    type="text"
+                    placeholder="أدخل رقم المحفظة أو الحساب البنكي"
+                    value={formData.destinationAccount}
+                    onChange={(e) =>
+                      setFormData({ ...formData, destinationAccount: e.target.value })
+                    }
+                    dir="ltr"
+                  />
                 </FormField>
 
                 {/* Notes */}
@@ -278,7 +278,7 @@ function WithdrawalRequestPage() {
             <CardContent className="space-y-4 text-sm">
               <div className="p-4 rounded-lg bg-gold/5 border border-gold/20">
                 <p className="font-medium text-gold mb-2">الحد الأدنى:</p>
-                <p className="text-muted-foreground text-xs">50 ريال</p>
+                <p className="text-muted-foreground text-xs">50 ج.م</p>
               </div>
 
               <div className="p-4 rounded-lg bg-accent/5 border border-accent/20">
@@ -302,36 +302,31 @@ function WithdrawalRequestPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {withdrawalHistory.map((withdrawal) => {
-                  const StatusIcon =
-                    withdrawal.status === "completed" ? CheckCircle : Clock;
-                  const statusColor =
-                    withdrawal.status === "completed"
-                      ? "text-success"
-                      : "text-warning";
-
-                  return (
-                    <div
-                      key={withdrawal.id}
-                      className="p-3 rounded-lg bg-gold/5 border border-gold/10 flex items-center justify-between text-sm"
-                    >
-                      <div>
-                        <p className="font-medium text-ivory">
-                          {withdrawal.amount} ريال
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {withdrawal.method}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <StatusIcon className={`w-4 h-4 ${statusColor}`} />
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {withdrawal.statusAr}
-                        </p>
-                      </div>
+                {myWithdrawals.length === 0 && (
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    لا توجد سحبيات سابقة بعد
+                  </p>
+                )}
+                {myWithdrawals.map((withdrawal) => (
+                  <div
+                    key={withdrawal.id}
+                    className="p-3 rounded-lg bg-gold/5 border border-gold/10 flex items-center justify-between text-sm"
+                  >
+                    <div>
+                      <p className="font-medium text-ivory">
+                        {fmt(withdrawal.amount)} ج.م
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {withdrawal.method}
+                      </p>
                     </div>
-                  );
-                })}
+                    <div className="text-right">
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {fmtDate(withdrawal.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>

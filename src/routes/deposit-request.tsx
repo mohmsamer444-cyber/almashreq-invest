@@ -45,7 +45,7 @@ function DepositRequestPage() {
 
     const amount = parseFloat(formData.amount);
     if (isNaN(amount) || amount < 50) {
-      toast.error("الحد الأدنى للإيداع هو 50 ريال");
+      toast.error("الحد الأدنى للإيداع هو 50 ج.م");
       return;
     }
 

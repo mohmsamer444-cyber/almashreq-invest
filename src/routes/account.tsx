@@ -1,43 +1,52 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AppShell, PageHeader } from "@/components/app-shell";
-import { useDemo } from "@/lib/demo";
+import { useDemo, PLANS, fmt, fmtDate } from "@/lib/demo";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Mail, Phone, MapPin, Wallet, TrendingUp, Settings, LogOut } from "lucide-react";
-import { useState } from "react";
+import { User, Phone, Wallet, TrendingUp, LogOut, Crown } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/account")({
   component: AccountPage,
 });
 
 function AccountPage() {
-  const { user, logout } = useDemo();
-  const [editMode, setEditMode] = useState(false);
+  const { user, logout, requests } = useDemo();
+  const navigate = useNavigate();
 
   if (!user) return null;
+
+  const plan = PLANS.find((p) => p.id === user.planId);
+  const myRequests = requests.filter((r) => r.userId === user.id);
 
   const stats = [
     {
       label: "الرصيد الحالي",
-      value: user.balance.toLocaleString("ar-EG"),
-      unit: "ريال",
+      value: fmt(user.balance),
+      unit: "ج.م",
       icon: Wallet,
       color: "text-gold",
     },
     {
       label: "إجمالي الأرباح",
-      value: user.totalProfit.toLocaleString("ar-EG"),
-      unit: "ريال",
+      value: fmt(user.profit),
+      unit: "ج.م",
       icon: TrendingUp,
       color: "text-success",
     },
     {
       label: "عدد الطلبات",
-      value: "12",
+      value: fmt(myRequests.length),
       unit: "طلب",
       icon: Phone,
       color: "text-accent",
     },
   ];
+
+  const handleLogout = () => {
+    logout();
+    toast.success("تم تسجيل الخروج بنجاح");
+    navigate({ to: "/auth" });
+  };
 
   return (
     <AppShell>
@@ -55,27 +64,21 @@ function AccountPage() {
 
           <div className="flex-1">
             <h2 className="text-2xl sm:text-3xl font-display text-ivory mb-1">
-              {user.name}
+              {user.fullName}
             </h2>
             <p className="text-muted-foreground mb-3">
-              عضو منذ ديسمبر 2024
+              عضو منذ {fmtDate(user.joinedAt)}
             </p>
             <div className="flex flex-wrap gap-2">
               <span className="px-3 py-1 rounded-full bg-success/10 border border-success/20 text-success text-sm font-medium">
                 ✓ موثق
               </span>
-              <span className="px-3 py-1 rounded-full bg-gold/10 border border-gold/20 text-gold text-sm font-medium">
-                الباقة الذهبية
+              <span className="px-3 py-1 rounded-full bg-gold/10 border border-gold/20 text-gold text-sm font-medium flex items-center gap-1">
+                <Crown className="h-3.5 w-3.5" />
+                {plan?.name ?? "بدون باقة"}
               </span>
             </div>
           </div>
-
-          <button
-            onClick={() => setEditMode(!editMode)}
-            className="px-4 py-2 rounded-lg bg-gold/10 border border-gold/20 text-gold hover:bg-gold/20 transition-colors font-medium text-sm"
-          >
-            {editMode ? "إلغاء" : "تعديل"}
-          </button>
         </div>
       </div>
 
@@ -118,7 +121,7 @@ function AccountPage() {
               </label>
               <div className="glass rounded-lg px-4 py-3 border border-border/50 text-ivory flex items-center gap-3">
                 <User className="h-4 w-4 text-muted-foreground" />
-                <span>{user.name}</span>
+                <span>{user.fullName}</span>
               </div>
             </div>
 
@@ -133,59 +136,26 @@ function AccountPage() {
               </div>
             </div>
 
-            {/* Email */}
+            {/* Plan */}
             <div>
               <label className="block text-sm font-medium text-muted-foreground mb-2">
-                البريد الإلكتروني
+                الباقة النشطة
               </label>
               <div className="glass rounded-lg px-4 py-3 border border-border/50 text-ivory flex items-center gap-3">
-                <Mail className="h-4 w-4 text-muted-foreground" />
-                <span dir="ltr">{user.email || "لم يتم إدخاله"}</span>
+                <Crown className="h-4 w-4 text-gold" />
+                <span>{plan?.name ?? "بدون باقة"}</span>
               </div>
             </div>
 
-            {/* Location */}
+            {/* Status */}
             <div>
               <label className="block text-sm font-medium text-muted-foreground mb-2">
-                الموقع
+                الحالة
               </label>
               <div className="glass rounded-lg px-4 py-3 border border-border/50 text-ivory flex items-center gap-3">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                <span>مصر</span>
+                <span className={`h-2 w-2 rounded-full ${user.status === "active" ? "bg-success" : "bg-destructive"}`} />
+                <span>{user.status === "active" ? "نشط" : "موقوف"}</span>
               </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Settings */}
-      <Card className="glass border-border/50 mb-8">
-        <CardHeader>
-          <CardTitle className="text-xl">الإعدادات</CardTitle>
-          <CardDescription>إدارة تفضيلاتك والأمان</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gold/5 transition-colors cursor-pointer">
-              <div className="flex items-center gap-3">
-                <Settings className="h-5 w-5 text-gold" />
-                <span className="font-medium">تغيير كلمة المرور</span>
-              </div>
-              <span className="text-muted-foreground">→</span>
-            </div>
-            <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gold/5 transition-colors cursor-pointer">
-              <div className="flex items-center gap-3">
-                <Mail className="h-5 w-5 text-gold" />
-                <span className="font-medium">تحديث البريد الإلكتروني</span>
-              </div>
-              <span className="text-muted-foreground">→</span>
-            </div>
-            <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gold/5 transition-colors cursor-pointer">
-              <div className="flex items-center gap-3">
-                <Phone className="h-5 w-5 text-gold" />
-                <span className="font-medium">تحديث رقم الهاتف</span>
-              </div>
-              <span className="text-muted-foreground">→</span>
             </div>
           </div>
         </CardContent>
@@ -194,14 +164,11 @@ function AccountPage() {
       {/* Logout Button */}
       <div className="flex gap-4 flex-col sm:flex-row">
         <button
-          onClick={() => logout()}
+          onClick={handleLogout}
           className="flex-1 px-6 py-3 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive hover:bg-destructive/20 transition-colors font-medium flex items-center justify-center gap-2"
         >
           <LogOut className="h-5 w-5" />
           تسجيل الخروج
-        </button>
-        <button className="flex-1 px-6 py-3 rounded-lg bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 transition-colors font-medium">
-          حفظ التغييرات
         </button>
       </div>
     </AppShell>

@@ -1,9 +1,9 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { toast } from "sonner";
-import { Eye, EyeOff, Loader2, LockKeyhole, Phone, User2, CheckCircle2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, LockKeyhole, Phone, User2 } from "lucide-react";
 import { z } from "zod";
-import { Logo, CinematicBackdrop } from "@/components/cinematic";
+import { Logo } from "@/components/cinematic";
 import { useDemo } from "@/lib/demo";
 
 export const Route = createFileRoute("/auth")({
@@ -39,7 +39,6 @@ type Errors = Partial<Record<"fullName" | "phone" | "password" | "confirm", stri
 function AuthPage() {
   const { register, login } = useDemo();
   const navigate = useNavigate();
-  const [successAnimation, setSuccessAnimation] = useState(false);
   const [mode, setMode] = useState<"register" | "login">("register");
   const [values, setValues] = useState({ fullName: "", phone: "", password: "", confirm: "" });
   const [errors, setErrors] = useState<Errors>({});
@@ -69,16 +68,21 @@ function AuthPage() {
     setBusy(true);
     window.setTimeout(() => {
       if (mode === "register") {
-        register({ fullName: values.fullName.trim(), phone: values.phone.trim(), password: values.password });
-        toast.success("تم إنشاء حسابك التجريبي بنجاح");
-      } else {
-        const u = login({ phone: values.phone.trim(), password: values.password });
-        if (!u) {
+        const result = register({ fullName: values.fullName.trim(), phone: values.phone.trim(), password: values.password });
+        if (!result.ok) {
           setBusy(false);
-          setErrors({ phone: "لا يوجد حساب تجريبي بهذا الرقم — أنشئ حسابًا جديدًا" });
+          setErrors({ phone: result.error ?? "حدث خطأ غير متوقع" });
           return;
         }
-        toast.success(`أهلًا بعودتك، ${u.fullName}`);
+        toast.success("تم إنشاء حسابك بنجاح");
+      } else {
+        const result = login({ phone: values.phone.trim(), password: values.password });
+        if (!result.ok) {
+          setBusy(false);
+          setErrors({ phone: result.error ?? "حدث خطأ غير متوقع" });
+          return;
+        }
+        toast.success(`أهلًا بعودتك، ${result.user?.fullName}`);
       }
       navigate({ to: "/dashboard" });
     }, 850);
@@ -221,10 +225,6 @@ function AuthPage() {
 
             <p className="mt-6 text-center text-xs leading-6 text-muted-foreground">
               بالمتابعة أنت توافق على أن هذه بيئة تجريبية لأغراض العرض فقط.
-              <br />
-              <Link to="/" className="text-gold underline-offset-4 hover:underline">
-                تصفّح الصفحة التعريفية
-              </Link>
             </p>
           </div>
         </div>

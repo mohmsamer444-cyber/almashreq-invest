@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 // Types
 export type RequestStatus = "pending" | "review" | "approved" | "rejected";
@@ -10,6 +10,7 @@ export interface User {
   id: string;
   fullName: string;
   phone: string;
+  password: string;
   planId: PlanTier;
   balance: number;
   invested: number;
@@ -130,10 +131,10 @@ export const PAYMENT_METHODS = [
 ];
 
 export const statusLabel: Record<RequestStatus, string> = {
-  pending: "قيد الانتظار",
-  review: "قيد المراجعة",
-  approved: "موافق عليه",
-  rejected: "مرفوض",
+  pending: "قيد الانتظار 🕐",
+  review: "قيد المراجعة ⏳",
+  approved: "موافق عليه ✅",
+  rejected: "مرفوض ❌",
 };
 
 // Formatting functions
@@ -150,6 +151,11 @@ export const fmtDate = (date: Date): string => {
   });
 };
 
+// Storage keys
+const USERS_KEY = "demo_users";
+const USER_KEY = "demo_user";
+const REQUESTS_KEY = "demo_requests";
+
 // Demo data generators
 function generateMockUsers(): User[] {
   return [
@@ -157,6 +163,7 @@ function generateMockUsers(): User[] {
       id: "u1",
       fullName: "أحمد محمود",
       phone: "01001234567",
+      password: "12345678",
       planId: "gold",
       balance: 125000,
       invested: 50000,
@@ -168,6 +175,7 @@ function generateMockUsers(): User[] {
       id: "u2",
       fullName: "فاطمة علي",
       phone: "01112345678",
+      password: "12345678",
       planId: "platinum",
       balance: 280000,
       invested: 100000,
@@ -179,6 +187,7 @@ function generateMockUsers(): User[] {
       id: "u3",
       fullName: "محمد حسن",
       phone: "01223456789",
+      password: "12345678",
       planId: "silver",
       balance: 45000,
       invested: 10000,
@@ -190,6 +199,7 @@ function generateMockUsers(): User[] {
       id: "u4",
       fullName: "ليلى إبراهيم",
       phone: "01334567890",
+      password: "12345678",
       planId: "diamond",
       balance: 425000,
       invested: 250000,
@@ -318,6 +328,26 @@ export const portfolioSeries = [
   { m: "أغسطس", v: 220, p: 60 },
 ];
 
+// Safe localStorage helpers
+function loadJSON<T>(key: string, fallback: T): T {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as T) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function saveJSON(key: string, value: unknown) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // ignore quota errors
+  }
+}
+
 // Demo context
 interface DemoContextType {
   user: User | null;
@@ -325,8 +355,8 @@ interface DemoContextType {
   requests: Request[];
   notifications: Notification[];
   logs: ActivityLog[];
-  register: (data: { fullName: string; phone: string; password: string }) => void;
-  login: (data: { phone: string; password: string }) => User | null;
+  register: (data: { fullName: string; phone: string; password: string }) => { ok: boolean; error?: string };
+  login: (data: { phone: string; password: string }) => { ok: boolean; error?: string; user?: User };
   logout: () => void;
   subscribePlan: (planId: PlanTier) => void;
   submitRequest: (req: Omit<Request, "id" | "userId" | "userName" | "createdAt">) => void;
@@ -339,22 +369,52 @@ const DemoContext = createContext<DemoContextType | undefined>(undefined);
 export const DemoProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(() => {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("demo_user");
+      const stored = localStorage.getItem(USER_KEY);
       return stored ? JSON.parse(stored) : null;
     }
     return null;
   });
 
-  const [users, setUsers] = useState<User[]>(generateMockUsers);
-  const [requests, setRequests] = useState<Request[]>(generateMockRequests);
+  const [users, setUsers] = useState<User[]>(() => {
+    const stored = loadJSON<User[]>(USERS_KEY, []);
+    if (stored.length > 0) return stored;
+    const mock = generateMockUsers();
+    saveJSON(USERS_KEY, mock);
+    return mock;
+  });
+
+  const [requests, setRequests] = useState<Request[]>(() => {
+    const stored = loadJSON<Request[]>(REQUESTS_KEY, []);
+    if (stored.length > 0) return stored;
+    const mock = generateMockRequests();
+    saveJSON(REQUESTS_KEY, mock);
+    return mock;
+  });
+
   const [notifications, setNotifications] = useState<Notification[]>(generateNotifications);
   const [logs, setLogs] = useState<ActivityLog[]>(generateActivityLogs);
 
+  // Persist users whenever they change
+  useEffect(() => {
+    saveJSON(USERS_KEY, users);
+  }, [users]);
+
+  // Persist requests whenever they change
+  useEffect(() => {
+    saveJSON(REQUESTS_KEY, requests);
+  }, [requests]);
+
   const register = (data: { fullName: string; phone: string; password: string }) => {
+    // Check if phone already exists
+    if (users.some((u) => u.phone === data.phone)) {
+      return { ok: false, error: "رقم الهاتف مسجّل بالفعل — جرّب تسجيل الدخول" };
+    }
+
     const newUser: User = {
       id: `u${Date.now()}`,
       fullName: data.fullName,
       phone: data.phone,
+      password: data.password,
       planId: "silver",
       balance: 50000,
       invested: 10000,
@@ -364,22 +424,26 @@ export const DemoProvider = ({ children }: { children: ReactNode }) => {
     };
     setUser(newUser);
     setUsers([...users, newUser]);
-    localStorage.setItem("demo_user", JSON.stringify(newUser));
+    localStorage.setItem(USER_KEY, JSON.stringify(newUser));
+    return { ok: true };
   };
 
-  const login = (data: { phone: string; password: string }): User | null => {
+  const login = (data: { phone: string; password: string }) => {
     const found = users.find((u) => u.phone === data.phone);
-    if (found) {
-      setUser(found);
-      localStorage.setItem("demo_user", JSON.stringify(found));
-      return found;
+    if (!found) {
+      return { ok: false, error: "لا يوجد حساب بهذا الرقم — أنشئ حسابًا جديدًا" };
     }
-    return null;
+    if (found.password !== data.password) {
+      return { ok: false, error: "كلمة المرور غير صحيحة" };
+    }
+    setUser(found);
+    localStorage.setItem(USER_KEY, JSON.stringify(found));
+    return { ok: true, user: found };
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("demo_user");
+    localStorage.removeItem(USER_KEY);
   };
 
   const subscribePlan = (planId: PlanTier) => {
@@ -387,7 +451,7 @@ export const DemoProvider = ({ children }: { children: ReactNode }) => {
       const updated = { ...user, planId };
       setUser(updated);
       setUsers(users.map((u) => (u.id === user.id ? updated : u)));
-      localStorage.setItem("demo_user", JSON.stringify(updated));
+      localStorage.setItem(USER_KEY, JSON.stringify(updated));
     }
   };
 
