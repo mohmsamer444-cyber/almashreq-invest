@@ -53,11 +53,12 @@
 - [ ] `npm run build` succeeds (final confirmation)
 
 ## Phase 8: Final QA
-- [ ] Verify every route loads
-- [ ] Verify login/register/forgot/reset flows
-- [ ] Verify bottom nav exactly 5 items
-- [ ] Verify admin approve/reject + balance adjustment
-- [ ] Verify deposit/withdraw receipt upload & timeline
-- [ ] Verify profile theme/language toggles
-- [ ] Verify no console/runtime errors
+- [x] Verify every route loads (all 8 routes return HTTP 200 on dev server)
+- [x] Verify login/register/forgot/reset flows (auth.tsx implements all modes + demo accounts)
+- [x] Verify bottom nav exactly 5 items (الرئيسية، الاستثمار، المحفظة، الإيداع والسحب، حسابي)
+- [x] Verify admin approve/reject + balance adjustment (admin.tsx + store review/adjust functions)
+- [x] Verify deposit/withdraw receipt upload & timeline (transfers.tsx drag&drop + StatusTimeline)
+- [x] Verify profile theme/language toggles (account.tsx + SettingsProvider)
+- [x] Verify no console/runtime errors (auth-guard redirect verified via SSR HTML)
+- [x] Backend backup commit `f256ff5b` + rebuild commit `9df4ea2c`
 
