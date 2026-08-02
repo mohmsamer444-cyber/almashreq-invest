@@ -110,4 +110,3 @@ export interface Testimonial {
   initials: string;
   color: string;
 }
-

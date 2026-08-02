@@ -4,9 +4,24 @@ import { cn } from "@/lib/utils";
 
 const ITEMS = [
   { to: "/" as const, labelAr: "الرئيسية", labelEn: "Home", icon: Home },
-  { to: "/invest" as const, labelAr: "الاستثمار", labelEn: "Invest", icon: TrendingUp },
-  { to: "/wallet" as const, labelAr: "المحفظة", labelEn: "Wallet", icon: Wallet },
-  { to: "/transfers" as const, labelAr: "الإيداع والسحب", labelEn: "Transfers", icon: ArrowLeftRight },
+  {
+    to: "/invest" as const,
+    labelAr: "الاستثمار",
+    labelEn: "Invest",
+    icon: TrendingUp,
+  },
+  {
+    to: "/wallet" as const,
+    labelAr: "المحفظة",
+    labelEn: "Wallet",
+    icon: Wallet,
+  },
+  {
+    to: "/transfers" as const,
+    labelAr: "الإيداع والسحب",
+    labelEn: "Transfers",
+    icon: ArrowLeftRight,
+  },
   { to: "/account" as const, labelAr: "حسابي", labelEn: "Account", icon: User },
 ];
 
@@ -34,7 +49,9 @@ export function BottomNav({ lang }: { lang: "ar" | "en" }) {
                 to={to}
                 className={cn(
                   "group relative flex flex-1 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[10px] font-semibold transition-all duration-300",
-                  active ? "text-gold" : "text-muted-foreground hover:text-gold",
+                  active
+                    ? "text-gold"
+                    : "text-muted-foreground hover:text-gold",
                 )}
                 aria-label={lang === "ar" ? labelAr : labelEn}
               >
@@ -61,7 +78,12 @@ export function BottomNav({ lang }: { lang: "ar" | "en" }) {
                     <span className="absolute inset-0 rounded-xl border border-gold/40 animate-pulse" />
                   )}
                 </span>
-                <span className={cn("truncate max-w-full leading-tight", active && "font-bold")}>
+                <span
+                  className={cn(
+                    "truncate max-w-full leading-tight",
+                    active && "font-bold",
+                  )}
+                >
                   {lang === "ar" ? labelAr : labelEn}
                 </span>
               </Link>
@@ -72,4 +94,3 @@ export function BottomNav({ lang }: { lang: "ar" | "en" }) {
     </nav>
   );
 }
-

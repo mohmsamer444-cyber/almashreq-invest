@@ -29,4 +29,3 @@ export function CountUp({
 
   return <span className={className}>{format(value)}</span>;
 }
-

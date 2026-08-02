@@ -33,19 +33,30 @@ export function StatCard({
           <p className="text-xs text-muted-foreground">{label}</p>
           <div className="mt-2 flex items-baseline gap-1.5">
             {count ? (
-              <CountUp to={Number(value)} className="font-display text-2xl font-bold text-ivory sm:text-3xl" />
+              <CountUp
+                to={Number(value)}
+                className="font-display text-2xl font-bold text-ivory sm:text-3xl"
+              />
             ) : (
-              <span className="font-display text-2xl font-bold text-ivory sm:text-3xl">{value}</span>
+              <span className="font-display text-2xl font-bold text-ivory sm:text-3xl">
+                {value}
+              </span>
             )}
             {suffix && <span className="text-xs text-gold">{suffix}</span>}
           </div>
-          {sub && <p className="mt-1.5 text-[11px] text-muted-foreground">{sub}</p>}
+          {sub && (
+            <p className="mt-1.5 text-[11px] text-muted-foreground">{sub}</p>
+          )}
         </div>
-        <span className={cn("grid h-11 w-11 shrink-0 place-items-center rounded-2xl transition-transform duration-500 group-hover:scale-110", accents[accent])}>
+        <span
+          className={cn(
+            "grid h-11 w-11 shrink-0 place-items-center rounded-2xl transition-transform duration-500 group-hover:scale-110",
+            accents[accent],
+          )}
+        >
           {icon}
         </span>
       </div>
     </div>
   );
 }
-

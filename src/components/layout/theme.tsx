@@ -9,7 +9,9 @@ interface SettingsContextType {
   isDark: boolean;
 }
 
-const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
+const SettingsContext = createContext<SettingsContextType | undefined>(
+  undefined,
+);
 
 export function useSettings() {
   const ctx = useContext(SettingsContext);
@@ -41,4 +43,3 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     </SettingsContext.Provider>
   );
 }
-

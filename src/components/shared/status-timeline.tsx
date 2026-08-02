@@ -2,11 +2,33 @@ import { CheckCircle2, Clock, XCircle } from "lucide-react";
 import type { RequestStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-export function StatusTimeline({ status = "pending" }: { status?: RequestStatus }) {
+export function StatusTimeline({
+  status = "pending",
+}: {
+  status?: RequestStatus;
+}) {
   const steps = [
     { key: "submitted", label: "تم الإرسال", desc: "استلمنا طلبك بنجاح" },
-    { key: "review", label: "قيد المراجعة", desc: "فريق العمليات يطابق البيانات" },
-    { key: status === "rejected" ? "rejected" : "final", label: status === "rejected" ? "مرفوض" : status === "approved" ? "تم الاعتماد" : "بانتظار القرار", desc: status === "rejected" ? "تم رفض الطلب لأحد الأسباب" : status === "approved" ? "اكتملت المعالجة بنجاح" : "سيتم إشعارك فور اتخاذ القرار" },
+    {
+      key: "review",
+      label: "قيد المراجعة",
+      desc: "فريق العمليات يطابق البيانات",
+    },
+    {
+      key: status === "rejected" ? "rejected" : "final",
+      label:
+        status === "rejected"
+          ? "مرفوض"
+          : status === "approved"
+            ? "تم الاعتماد"
+            : "بانتظار القرار",
+      desc:
+        status === "rejected"
+          ? "تم رفض الطلب لأحد الأسباب"
+          : status === "approved"
+            ? "اكتملت المعالجة بنجاح"
+            : "سيتم إشعارك فور اتخاذ القرار",
+    },
   ];
 
   const currentIndex = status === "pending" ? 1 : status === "approved" ? 2 : 2;
@@ -37,10 +59,21 @@ export function StatusTimeline({ status = "pending" }: { status?: RequestStatus 
                   <Clock className="h-4 w-4" />
                 )}
               </span>
-              {i < steps.length - 1 && <span className="mt-1 w-px flex-1 bg-border" />}
+              {i < steps.length - 1 && (
+                <span className="mt-1 w-px flex-1 bg-border" />
+              )}
             </span>
             <div className="pb-2">
-              <p className={cn("text-sm font-medium", rejected ? "text-destructive" : done ? "text-ivory" : "text-muted-foreground")}>
+              <p
+                className={cn(
+                  "text-sm font-medium",
+                  rejected
+                    ? "text-destructive"
+                    : done
+                      ? "text-ivory"
+                      : "text-muted-foreground",
+                )}
+              >
                 {s.label}
               </p>
               <p className="mt-0.5 text-xs text-muted-foreground">{s.desc}</p>
@@ -51,4 +84,3 @@ export function StatusTimeline({ status = "pending" }: { status?: RequestStatus 
     </ol>
   );
 }
-

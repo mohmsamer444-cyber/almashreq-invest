@@ -27,10 +27,15 @@ export function Logo({ size = 40 }: { size?: number }) {
         </svg>
       </div>
       <div className="leading-tight">
-        <p className="font-display text-lg font-bold text-gold" style={{ fontSize: size * 0.42 }}>
+        <p
+          className="font-display text-lg font-bold text-gold"
+          style={{ fontSize: size * 0.42 }}
+        >
           منصة المشرق
         </p>
-        <p className="text-[10px] tracking-[0.3em] text-muted-foreground">AL-MASHREQ</p>
+        <p className="text-[10px] tracking-[0.3em] text-muted-foreground">
+          AL-MASHREQ
+        </p>
       </div>
     </div>
   );
@@ -40,7 +45,11 @@ export function LogoMark({ size = 40 }: { size?: number }) {
   return (
     <div
       className="grid shrink-0 place-items-center rounded-2xl text-graphite"
-      style={{ height: size, width: size, backgroundImage: "var(--gradient-gold)" }}
+      style={{
+        height: size,
+        width: size,
+        backgroundImage: "var(--gradient-gold)",
+      }}
     >
       <svg
         width={size * 0.55}
@@ -60,4 +69,3 @@ export function LogoMark({ size = 40 }: { size?: number }) {
     </div>
   );
 }
-

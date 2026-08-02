@@ -10,6 +10,7 @@ import {
   LogOut,
   Moon,
   Sun,
+  Banknote,
 } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { useSettings } from "./theme";
@@ -26,14 +27,26 @@ export function Sidebar() {
 
   const main = [
     { to: "/", labelAr: "الرئيسية", labelEn: "Home", icon: Home },
-    { to: "/invest", labelAr: "الاستثمار", labelEn: "Invest", icon: TrendingUp },
+    {
+      to: "/invest",
+      labelAr: "الاستثمار",
+      labelEn: "Invest",
+      icon: TrendingUp,
+    },
     { to: "/wallet", labelAr: "المحفظة", labelEn: "Wallet", icon: Wallet },
-    { to: "/transfers", labelAr: "الإيداع والسحب", labelEn: "Transfers", icon: ArrowLeftRight },
+    {
+      to: "/transfers",
+      labelAr: "الإيداع والسحب",
+      labelEn: "Transfers",
+      icon: ArrowLeftRight,
+    },
     { to: "/account", labelAr: "حسابي", labelEn: "Account", icon: User },
   ];
 
   const isActive = (to: string) =>
-    to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(`${to}/`);
+    to === "/"
+      ? pathname === "/"
+      : pathname === to || pathname.startsWith(`${to}/`);
 
   const handleLogout = () => {
     logout();
@@ -57,7 +70,9 @@ export function Sidebar() {
             {initials(user.fullName)}
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-ivory">{user.fullName}</p>
+            <p className="truncate text-sm font-semibold text-ivory">
+              {user.fullName}
+            </p>
             <p className="truncate text-[11px] text-muted-foreground" dir="ltr">
               {user.email}
             </p>
@@ -90,10 +105,15 @@ export function Sidebar() {
                     : "bg-background/40 text-muted-foreground group-hover:text-gold",
                 )}
               >
-                <Icon className="h-[18px] w-[18px]" strokeWidth={active ? 2.2 : 1.8} />
+                <Icon
+                  className="h-[18px] w-[18px]"
+                  strokeWidth={active ? 2.2 : 1.8}
+                />
               </span>
               {lang === "ar" ? labelAr : labelEn}
-              {active && <span className="ms-auto h-2 w-2 rounded-full bg-gold shadow-[0_0_10px_rgba(212,175,55,0.8)]" />}
+              {active && (
+                <span className="ms-auto h-2 w-2 rounded-full bg-gold shadow-[0_0_10px_rgba(212,175,55,0.8)]" />
+              )}
             </Link>
           );
         })}
@@ -124,6 +144,27 @@ export function Sidebar() {
               </span>
               {lang === "ar" ? "لوحة الإدارة" : "Admin"}
             </Link>
+            <Link
+              to="/admin/deposits"
+              className={cn(
+                "group flex items-center gap-3 rounded-2xl px-3.5 py-3 text-sm font-medium transition-all duration-300",
+                isActive("/admin/deposits")
+                  ? "bg-gradient-to-l from-gold/20 to-transparent text-gold shadow-[inset_0_0_0_1px_rgba(212,175,55,0.25)]"
+                  : "text-muted-foreground hover:bg-gold/5 hover:text-ivory",
+              )}
+            >
+              <span
+                className={cn(
+                  "grid h-9 w-9 place-items-center rounded-xl transition-all duration-300",
+                  isActive("/admin/deposits")
+                    ? "bg-gold/15 text-gold"
+                    : "bg-background/40 text-muted-foreground group-hover:text-gold",
+                )}
+              >
+                <Banknote className="h-[18px] w-[18px]" />
+              </span>
+              {lang === "ar" ? "إدارة الإيداعات" : "Deposits"}
+            </Link>
           </>
         )}
       </nav>
@@ -140,8 +181,18 @@ export function Sidebar() {
           onClick={toggleTheme}
           className="flex w-full items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm text-muted-foreground transition-colors hover:text-gold"
         >
-          {isDark ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
-          {isDark ? (lang === "ar" ? "الوضع النهاري" : "Light mode") : lang === "ar" ? "الوضع الليلي" : "Dark mode"}
+          {isDark ? (
+            <Sun className="h-[18px] w-[18px]" />
+          ) : (
+            <Moon className="h-[18px] w-[18px]" />
+          )}
+          {isDark
+            ? lang === "ar"
+              ? "الوضع النهاري"
+              : "Light mode"
+            : lang === "ar"
+              ? "الوضع الليلي"
+              : "Dark mode"}
         </button>
         <button
           onClick={handleLogout}
@@ -154,4 +205,3 @@ export function Sidebar() {
     </aside>
   );
 }
-

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Image as ImageIcon } from "lucide-react";
 
-const HERO_SRC = "/images/hero-banner.jpg";
+const HERO_SRC = "/images/mashreq-login.jpg";
 
 /**
- * HeroBanner — displays public/images/hero-banner.jpg above the welcome card.
+ * HeroBanner — displays public/images/mashreq-login.jpg above the welcome card.
  * If the image file is missing or fails to load, a premium gradient placeholder
- * is rendered instead. Replace the file at public/images/hero-banner.jpg at any
+ * is rendered instead. Replace the file at public/images/mashreq-login.jpg at any
  * time — no code changes required.
  */
 export function HeroBanner({ className }: { className?: string }) {
@@ -39,8 +39,10 @@ export function HeroBanner({ className }: { className?: string }) {
           <span className="grid h-14 w-14 place-items-center rounded-2xl border border-gold/30 bg-gold/10 text-gold">
             <ImageIcon className="h-7 w-7" />
           </span>
-          <p className="font-display text-lg font-bold text-gold-gradient">AL-MASHREQ</p>
-          <p className="text-xs text-muted-foreground">hero-banner.jpg</p>
+          <p className="font-display text-lg font-bold text-gold-gradient">
+            AL-MASHREQ
+          </p>
+          <p className="text-xs text-muted-foreground">mashreq-login.jpg</p>
         </div>
       </div>
 
@@ -55,9 +57,13 @@ export function HeroBanner({ className }: { className?: string }) {
         />
       )}
 
+      {/* Subtle dark overlay for premium look */}
+      {status === "ok" && (
+        <div className="pointer-events-none absolute inset-0 bg-black/30" />
+      )}
+
       {/* Bottom fade into background */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-background to-transparent" />
     </div>
   );
 }
-

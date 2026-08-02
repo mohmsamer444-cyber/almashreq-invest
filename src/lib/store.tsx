@@ -24,7 +24,11 @@ import {
   ADMIN_PHONE,
   PACKAGES,
 } from "./constants";
-import { createSessionToken, hashPasswordNew, verifyPassword } from "./security";
+import {
+  createSessionToken,
+  hashPasswordNew,
+  verifyPassword,
+} from "./security";
 import { uid } from "./utils";
 
 // Storage keys
@@ -219,7 +223,14 @@ function buildSeedWithdrawals(): WithdrawalRequest[] {
 }
 
 function buildSeedTransactions(): Transaction[] {
-  const tx = (id: string, userId: string, type: Transaction["type"], amount: number, desc: string, at: string): Transaction => ({
+  const tx = (
+    id: string,
+    userId: string,
+    type: Transaction["type"],
+    amount: number,
+    desc: string,
+    at: string,
+  ): Transaction => ({
     id,
     userId,
     type,
@@ -239,18 +250,61 @@ function buildSeedTransactions(): Transaction[] {
 
 function buildSeedNotifications(): AppNotification[] {
   return [
-    { id: "n1", userId: "u1", title: "تم اعتماد إيداعك", body: "تمت إضافة 50,000 ج.م إلى محفظتك بنجاح.", read: false, createdAt: daysAgo(119) },
-    { id: "n2", userId: "u1", title: "أرباح جديدة", body: "أُضيفت أرباح يومية بقيمة 2,250 ج.م إلى رصيدك.", read: false, createdAt: daysAgo(5) },
-    { id: "n3", userId: "u2", title: "طلب سحب قيد المراجعة", body: "طلب السحب بقيمة 25,000 ج.م قيد المعالجة وسيتم تأكيده خلال 24 ساعة.", read: false, createdAt: daysAgo(0, 20) },
-    { id: "n4", userId: "all", title: "منصة المشرق", body: "نظام جديد للتقارير الأسبوعية أصبح متاحًا الآن لجميع المستخدمين.", read: false, createdAt: daysAgo(2) },
+    {
+      id: "n1",
+      userId: "u1",
+      title: "تم اعتماد إيداعك",
+      body: "تمت إضافة 50,000 ج.م إلى محفظتك بنجاح.",
+      read: false,
+      createdAt: daysAgo(119),
+    },
+    {
+      id: "n2",
+      userId: "u1",
+      title: "أرباح جديدة",
+      body: "أُضيفت أرباح يومية بقيمة 2,250 ج.م إلى رصيدك.",
+      read: false,
+      createdAt: daysAgo(5),
+    },
+    {
+      id: "n3",
+      userId: "u2",
+      title: "طلب سحب قيد المراجعة",
+      body: "طلب السحب بقيمة 25,000 ج.م قيد المعالجة وسيتم تأكيده خلال 24 ساعة.",
+      read: false,
+      createdAt: daysAgo(0, 20),
+    },
+    {
+      id: "n4",
+      userId: "all",
+      title: "منصة المشرق",
+      body: "نظام جديد للتقارير الأسبوعية أصبح متاحًا الآن لجميع المستخدمين.",
+      read: false,
+      createdAt: daysAgo(2),
+    },
   ];
 }
 
 function buildSeedLogs(): ActivityLog[] {
   return [
-    { id: "l1", action: "تم اعتماد إيداع أحمد محمود بقيمة 50,000 ج.م", actor: "الإدارة", at: daysAgo(119) },
-    { id: "l2", action: "تم اعتماد سحب فاطمة علي بقيمة 25,000 ج.م", actor: "الإدارة", at: daysAgo(19) },
-    { id: "l3", action: "انضم محمد حسن إلى منصة المشرق", actor: "النظام", at: daysAgo(150) },
+    {
+      id: "l1",
+      action: "تم اعتماد إيداع أحمد محمود بقيمة 50,000 ج.م",
+      actor: "الإدارة",
+      at: daysAgo(119),
+    },
+    {
+      id: "l2",
+      action: "تم اعتماد سحب فاطمة علي بقيمة 25,000 ج.م",
+      actor: "الإدارة",
+      at: daysAgo(19),
+    },
+    {
+      id: "l3",
+      action: "انضم محمد حسن إلى منصة المشرق",
+      actor: "النظام",
+      at: daysAgo(150),
+    },
   ];
 }
 
@@ -310,7 +364,9 @@ interface StoreContextType {
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const [users, setUsers] = useState<User[]>(() => loadJSON<User[]>(K_USERS, []));
+  const [users, setUsers] = useState<User[]>(() =>
+    loadJSON<User[]>(K_USERS, []),
+  );
   const [sessionUserId, setSessionUserId] = useState<string | null>(() =>
     loadJSON<string | null>(K_SESSION, null),
   );
@@ -326,7 +382,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<AppNotification[]>(() =>
     loadJSON<AppNotification[]>(K_NOTIFICATIONS, []),
   );
-  const [logs, setLogs] = useState<ActivityLog[]>(() => loadJSON<ActivityLog[]>(K_LOGS, []));
+  const [logs, setLogs] = useState<ActivityLog[]>(() =>
+    loadJSON<ActivityLog[]>(K_LOGS, []),
+  );
 
   // Hydrate seeds on first run
   useEffect(() => {
@@ -377,12 +435,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [users, sessionUserId],
   );
 
-  const pushNotification = useCallback((n: Omit<AppNotification, "id" | "read" | "createdAt">) => {
-    setNotifications((prev) => [
-      { ...n, id: uid("n"), read: false, createdAt: new Date().toISOString() },
-      ...prev,
-    ]);
-  }, []);
+  const pushNotification = useCallback(
+    (n: Omit<AppNotification, "id" | "read" | "createdAt">) => {
+      setNotifications((prev) => [
+        {
+          ...n,
+          id: uid("n"),
+          read: false,
+          createdAt: new Date().toISOString(),
+        },
+        ...prev,
+      ]);
+    },
+    [],
+  );
 
   const pushLog = useCallback((action: string) => {
     setLogs((prev) => [
@@ -393,7 +459,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const register = useCallback(
     async (input: RegisterInput): Promise<AuthResult> => {
-      if (users.some((u) => u.email.toLowerCase() === input.email.toLowerCase())) {
+      if (
+        users.some((u) => u.email.toLowerCase() === input.email.toLowerCase())
+      ) {
         return { ok: false, error: "البريد الإلكتروني مسجّل بالفعل" };
       }
       if (users.some((u) => u.phone === input.phone)) {
@@ -424,7 +492,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setSessionUserId(newUser.id);
       const token = await createSessionToken(newUser.id);
       saveJSON("am_token", token);
-      pushNotification({ userId: "all", title: "مستخدم جديد", body: `${newUser.fullName} انضم إلى منصة المشرق.` });
+      pushNotification({
+        userId: "all",
+        title: "مستخدم جديد",
+        body: `${newUser.fullName} انضم إلى منصة المشرق.`,
+      });
       pushLog(`${newUser.fullName} أنشأ حسابًا جديدًا`);
       return { ok: true };
     },
@@ -439,7 +511,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           u.phone === identifier,
       );
       if (!found) return { ok: false, error: "لا يوجد حساب بهذه البيانات" };
-      if (found.status === "suspended") return { ok: false, error: "هذا الحساب موقوف مؤقتًا" };
+      if (found.status === "suspended")
+        return { ok: false, error: "هذا الحساب موقوف مؤقتًا" };
       const ok = await verifyPassword(password, found.salt, found.passwordHash);
       if (!ok) return { ok: false, error: "كلمة المرور غير صحيحة" };
       setSessionUserId(found.id);
@@ -464,7 +537,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const resetPassword = useCallback(
     async (email: string, password: string): Promise<AuthResult> => {
-      const target = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+      const target = users.find(
+        (u) => u.email.toLowerCase() === email.toLowerCase(),
+      );
       if (!target) return { ok: false, error: "لا يوجد حساب بهذا البريد" };
       const hashed = await hashPasswordNew(password);
       setUsers((prev) =>
@@ -486,9 +561,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("am_token");
   }, []);
 
-  const updateUser = useCallback((patch: Partial<User>) => {
-    setUsers((prev) => prev.map((u) => (u.id === sessionUserId ? { ...u, ...patch } : u)));
-  }, [sessionUserId]);
+  const updateUser = useCallback(
+    (patch: Partial<User>) => {
+      setUsers((prev) =>
+        prev.map((u) => (u.id === sessionUserId ? { ...u, ...patch } : u)),
+      );
+    },
+    [sessionUserId],
+  );
 
   const setTheme = useCallback(
     (theme: Theme) => updateUser({ theme }),
@@ -504,11 +584,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     (packageId: string) => {
       const pkg = PACKAGES.find((p) => p.id === packageId);
       if (!pkg) return;
+      const current = users.find((u) => u.id === sessionUserId);
+      if (!current) return;
+      if (current.balance < pkg.amount) return;
       setUsers((prev) =>
         prev.map((u) =>
           u.id === sessionUserId
             ? {
                 ...u,
+                balance: u.balance - pkg.amount,
                 activePackageId: packageId,
                 invested: pkg.amount,
                 investmentStartedAt: new Date().toISOString(),
@@ -527,14 +611,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         },
         ...prev,
       ]);
-      pushNotification({ userId: "all", title: "تفعيل باقة", body: `تم تفعيل باقة ${pkg.nameAr} بنجاح.` });
-      pushLog(`تم تفعيل باقة ${pkg.nameAr}`);
+      pushNotification({
+        userId: sessionUserId!,
+        title: "تفعيل باقة",
+        body: `تم تفعيل باقة ${pkg.nameAr} بنجاح. تم خصم ${pkg.amount.toLocaleString("en-US")} ج.م من رصيدك.`,
+      });
+      pushLog(`تم تفعيل باقة ${pkg.nameAr} للمستخدم ${current.fullName}`);
     },
-    [sessionUserId, pushNotification, pushLog],
+    [sessionUserId, users, pushNotification, pushLog],
   );
 
   const submitDeposit = useCallback(
-    (input: { method: string; senderPhone: string; amount: number; receiptName: string; receiptData?: string; notes?: string }) => {
+    (input: {
+      method: string;
+      senderPhone: string;
+      amount: number;
+      receiptName: string;
+      receiptData?: string;
+      notes?: string;
+    }) => {
       if (!currentUser) return;
       const req: DepositRequest = {
         id: uid("d"),
@@ -550,14 +645,32 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         createdAt: new Date().toISOString(),
       };
       setDeposits((prev) => [req, ...prev]);
-      pushNotification({ userId: "all", title: "طلب إيداع جديد", body: `${currentUser.fullName} قدّم طلب إيداع بقيمة ${input.amount.toLocaleString("en-US")} ج.م.` });
-      pushLog(`${currentUser.fullName} قدّم طلب إيداع بقيمة ${input.amount.toLocaleString("en-US")} ج.م`);
+      pushNotification({
+        userId: currentUser.id,
+        title: "تم إرسال طلب الإيداع",
+        body: `تم إرسال طلب الإيداع بقيمة ${input.amount.toLocaleString("en-US")} ج.م وهو الآن بانتظار مراجعة الإدارة.`,
+      });
+      pushNotification({
+        userId: "all",
+        title: "طلب إيداع جديد",
+        body: `${currentUser.fullName} قدّم طلب إيداع بقيمة ${input.amount.toLocaleString("en-US")} ج.م.`,
+      });
+      pushLog(
+        `${currentUser.fullName} قدّم طلب إيداع بقيمة ${input.amount.toLocaleString("en-US")} ج.م`,
+      );
     },
     [currentUser, pushNotification, pushLog],
   );
 
   const submitWithdrawal = useCallback(
-    (input: { fullName: string; phone: string; amount: number; method: string; destination: string; notes?: string }) => {
+    (input: {
+      fullName: string;
+      phone: string;
+      amount: number;
+      method: string;
+      destination: string;
+      notes?: string;
+    }) => {
       if (!currentUser) return;
       const req: WithdrawalRequest = {
         id: uid("w"),
@@ -575,10 +688,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setWithdrawals((prev) => [req, ...prev]);
       // Hold balance for pending withdrawal
       setUsers((prev) =>
-        prev.map((u) => (u.id === currentUser.id ? { ...u, balance: u.balance - input.amount } : u)),
+        prev.map((u) =>
+          u.id === currentUser.id
+            ? { ...u, balance: u.balance - input.amount }
+            : u,
+        ),
       );
-      pushNotification({ userId: "all", title: "طلب سحب جديد", body: `${currentUser.fullName} قدّم طلب سحب بقيمة ${input.amount.toLocaleString("en-US")} ج.م.` });
-      pushLog(`${currentUser.fullName} قدّم طلب سحب بقيمة ${input.amount.toLocaleString("en-US")} ج.م`);
+      pushNotification({
+        userId: "all",
+        title: "طلب سحب جديد",
+        body: `${currentUser.fullName} قدّم طلب سحب بقيمة ${input.amount.toLocaleString("en-US")} ج.م.`,
+      });
+      pushLog(
+        `${currentUser.fullName} قدّم طلب سحب بقيمة ${input.amount.toLocaleString("en-US")} ج.م`,
+      );
     },
     [currentUser, pushNotification, pushLog],
   );
@@ -586,23 +709,46 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const reviewDeposit = useCallback(
     (id: string, status: RequestStatus) => {
       setDeposits((prev) =>
-        prev.map((d) => (d.id === id ? { ...d, status, reviewedAt: new Date().toISOString() } : d)),
+        prev.map((d) =>
+          d.id === id
+            ? { ...d, status, reviewedAt: new Date().toISOString() }
+            : d,
+        ),
       );
       const req = deposits.find((d) => d.id === id);
       if (!req) return;
       if (status === "approved") {
         setUsers((prev) =>
-          prev.map((u) => (u.id === req.userId ? { ...u, balance: u.balance + req.amount } : u)),
+          prev.map((u) =>
+            u.id === req.userId ? { ...u, balance: u.balance + req.amount } : u,
+          ),
         );
         setTransactions((prev) => [
-          { id: uid("tx"), userId: req.userId, type: "deposit", amount: req.amount, description: `إيداع — ${req.method}`, createdAt: new Date().toISOString() },
+          {
+            id: uid("tx"),
+            userId: req.userId,
+            type: "deposit",
+            amount: req.amount,
+            description: `إيداع — ${req.method}`,
+            createdAt: new Date().toISOString(),
+          },
           ...prev,
         ]);
-        pushNotification({ userId: req.userId, title: "تم اعتماد إيداعك", body: `تمت إضافة ${req.amount.toLocaleString("en-US")} ج.م إلى محفظتك.` });
+        pushNotification({
+          userId: req.userId,
+          title: "تم اعتماد إيداعك",
+          body: `✅ تم إضافة رصيد بقيمة ${req.amount.toLocaleString("en-US")} ج.م إلى حسابك.`,
+        });
       } else if (status === "rejected") {
-        pushNotification({ userId: req.userId, title: "تم رفض الإيداع", body: `نعتذر، تم رفض طلب الإيداع بقيمة ${req.amount.toLocaleString("en-US")} ج.م. يرجى التواصل مع الدعم.` });
+        pushNotification({
+          userId: req.userId,
+          title: "تم رفض طلب الإيداع",
+          body: `تم رفض طلب الإيداع. يرجى مراجعة بيانات التحويل والمحاولة مرة أخرى.`,
+        });
       }
-      pushLog(`تم ${status === "approved" ? "اعتماد" : "رفض"} إيداع ${req.userName} بقيمة ${req.amount.toLocaleString("en-US")} ج.م`);
+      pushLog(
+        `تم ${status === "approved" ? "اعتماد" : "رفض"} إيداع ${req.userName} بقيمة ${req.amount.toLocaleString("en-US")} ج.م`,
+      );
     },
     [deposits, pushNotification, pushLog],
   );
@@ -610,41 +756,74 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const reviewWithdrawal = useCallback(
     (id: string, status: RequestStatus) => {
       setWithdrawals((prev) =>
-        prev.map((w) => (w.id === id ? { ...w, status, reviewedAt: new Date().toISOString() } : w)),
+        prev.map((w) =>
+          w.id === id
+            ? { ...w, status, reviewedAt: new Date().toISOString() }
+            : w,
+        ),
       );
       const req = withdrawals.find((w) => w.id === id);
       if (!req) return;
       if (status === "rejected") {
         // Refund held balance
         setUsers((prev) =>
-          prev.map((u) => (u.id === req.userId ? { ...u, balance: u.balance + req.amount } : u)),
+          prev.map((u) =>
+            u.id === req.userId ? { ...u, balance: u.balance + req.amount } : u,
+          ),
         );
-        pushNotification({ userId: req.userId, title: "تم رفض السحب", body: `تم إرجاع مبلغ ${req.amount.toLocaleString("en-US")} ج.م إلى رصيدك بعد رفض طلب السحب.` });
+        pushNotification({
+          userId: req.userId,
+          title: "تم رفض السحب",
+          body: `تم إرجاع مبلغ ${req.amount.toLocaleString("en-US")} ج.م إلى رصيدك بعد رفض طلب السحب.`,
+        });
       } else if (status === "approved") {
         setTransactions((prev) => [
-          { id: uid("tx"), userId: req.userId, type: "withdrawal", amount: req.amount, description: `سحب — ${req.method}`, createdAt: new Date().toISOString() },
+          {
+            id: uid("tx"),
+            userId: req.userId,
+            type: "withdrawal",
+            amount: req.amount,
+            description: `سحب — ${req.method}`,
+            createdAt: new Date().toISOString(),
+          },
           ...prev,
         ]);
-        pushNotification({ userId: req.userId, title: "تم اعتماد السحب", body: `تم تحويل ${req.amount.toLocaleString("en-US")} ج.م إلى حسابك بنجاح.` });
+        pushNotification({
+          userId: req.userId,
+          title: "تم اعتماد السحب",
+          body: `تم تحويل ${req.amount.toLocaleString("en-US")} ج.م إلى حسابك بنجاح.`,
+        });
       }
-      pushLog(`تم ${status === "approved" ? "اعتماد" : "رفض"} سحب ${req.userName} بقيمة ${req.amount.toLocaleString("en-US")} ج.م`);
+      pushLog(
+        `تم ${status === "approved" ? "اعتماد" : "رفض"} سحب ${req.userName} بقيمة ${req.amount.toLocaleString("en-US")} ج.م`,
+      );
     },
     [withdrawals, pushNotification, pushLog],
   );
 
   const toggleUserStatus = useCallback((id: string) => {
     setUsers((prev) =>
-      prev.map((u) => (u.id === id ? { ...u, status: u.status === "active" ? "suspended" : "active" } : u)),
+      prev.map((u) =>
+        u.id === id
+          ? { ...u, status: u.status === "active" ? "suspended" : "active" }
+          : u,
+      ),
     );
   }, []);
 
   const adjustBalance = useCallback(
     (userId: string, delta: number, reason: string) => {
       setUsers((prev) =>
-        prev.map((u) => (u.id === userId ? { ...u, balance: Math.max(0, u.balance + delta) } : u)),
+        prev.map((u) =>
+          u.id === userId
+            ? { ...u, balance: Math.max(0, u.balance + delta) }
+            : u,
+        ),
       );
       const u = users.find((x) => x.id === userId);
-      pushLog(`${reason} — ${u?.fullName ?? userId} (${delta > 0 ? "+" : ""}${delta.toLocaleString("en-US")} ج.م)`);
+      pushLog(
+        `${reason} — ${u?.fullName ?? userId} (${delta > 0 ? "+" : ""}${delta.toLocaleString("en-US")} ج.م)`,
+      );
     },
     [users, pushLog],
   );
@@ -682,7 +861,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     resetDemo,
   };
 
-  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
+  return (
+    <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
+  );
 }
 
 export function useStore() {
@@ -690,4 +871,3 @@ export function useStore() {
   if (!ctx) throw new Error("useStore must be used within StoreProvider");
   return ctx;
 }
-

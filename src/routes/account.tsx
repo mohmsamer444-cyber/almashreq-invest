@@ -1,12 +1,31 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Camera, KeyRound, LogOut, Mail, Moon, Phone, Sun, User2, Bell, Languages } from "lucide-react";
+import {
+  Camera,
+  KeyRound,
+  LogOut,
+  Mail,
+  Moon,
+  Phone,
+  Sun,
+  User2,
+  Bell,
+  Languages,
+} from "lucide-react";
 import { useStore } from "@/lib/store";
 import { useSettings } from "@/components/layout/theme";
 import { AppShell, PageHeader } from "@/components/layout/app-shell";
 import { PAYMENT_METHODS } from "@/lib/constants";
-import { Button, Input, Switch, Card, CardContent, CardTitle, CardDescription } from "@/components/ui";
+import {
+  Button,
+  Input,
+  Switch,
+  Card,
+  CardContent,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui";
 import { cn, fmtDateTime, initials } from "@/lib/utils";
 
 export const Route = createFileRoute("/account")({
@@ -44,11 +63,17 @@ function AccountPage() {
 
   const changePassword = () => {
     if (newPassword.length < 8) {
-      toast.error(lang === "ar" ? "كلمة المرور يجب أن تكون 8 أحرف على الأقل" : "Password must be at least 8 characters");
+      toast.error(
+        lang === "ar"
+          ? "كلمة المرور يجب أن تكون 8 أحرف على الأقل"
+          : "Password must be at least 8 characters",
+      );
       return;
     }
     if (newPassword !== confirmPassword) {
-      toast.error(lang === "ar" ? "كلمتا المرور غير متطابقتين" : "Passwords do not match");
+      toast.error(
+        lang === "ar" ? "كلمتا المرور غير متطابقتين" : "Passwords do not match",
+      );
       return;
     }
     updateUser({ passwordHash: newPassword });
@@ -61,7 +86,11 @@ function AccountPage() {
     <AppShell>
       <PageHeader
         title={lang === "ar" ? "حسابي" : "My Account"}
-        subtitle={lang === "ar" ? "إدارة ملفك الشخصي وإعداداتك الخاصة" : "Manage your profile and settings"}
+        subtitle={
+          lang === "ar"
+            ? "إدارة ملفك الشخصي وإعداداتك الخاصة"
+            : "Manage your profile and settings"
+        }
       />
 
       {/* Profile card */}
@@ -70,16 +99,24 @@ function AccountPage() {
         <div className="relative flex flex-col items-center gap-5 sm:flex-row sm:items-center">
           <div
             className="grid h-20 w-20 shrink-0 place-items-center rounded-3xl text-xl font-bold text-white"
-            style={{ background: user.avatarColor, boxShadow: "var(--shadow-gold)" }}
+            style={{
+              background: user.avatarColor,
+              boxShadow: "var(--shadow-gold)",
+            }}
           >
             {initials(user.fullName)}
           </div>
           <div className="min-w-0 flex-1 text-center sm:text-start">
-            <h2 className="truncate font-display text-2xl font-bold text-ivory">{user.fullName}</h2>
+            <h2 className="truncate font-display text-2xl font-bold text-ivory">
+              {user.fullName}
+            </h2>
             <p className="mt-1 flex items-center justify-center gap-1.5 text-sm text-muted-foreground sm:justify-start">
               <Mail className="h-4 w-4 text-gold" /> {user.email}
             </p>
-            <p className="mt-1 flex items-center justify-center gap-1.5 text-sm text-muted-foreground sm:justify-start" dir="ltr">
+            <p
+              className="mt-1 flex items-center justify-center gap-1.5 text-sm text-muted-foreground sm:justify-start"
+              dir="ltr"
+            >
               <Phone className="h-4 w-4 text-gold" /> {user.phone}
             </p>
           </div>
@@ -96,29 +133,49 @@ function AccountPage() {
             <User2 className="h-4 w-4 text-gold" />
             {lang === "ar" ? "المعلومات الشخصية" : "Personal info"}
           </CardTitle>
-          <CardDescription>{lang === "ar" ? "بيانات الحساب الأساسية" : "Basic account details"}</CardDescription>
+          <CardDescription>
+            {lang === "ar" ? "بيانات الحساب الأساسية" : "Basic account details"}
+          </CardDescription>
           <CardContent>
             <div className="space-y-3">
               <div className="rounded-2xl border border-border/50 bg-background/40 p-3">
-                <p className="text-[11px] text-muted-foreground">{lang === "ar" ? "الاسم بالكامل" : "Full name"}</p>
-                <p className="mt-0.5 text-sm font-medium text-ivory">{user.fullName}</p>
+                <p className="text-[11px] text-muted-foreground">
+                  {lang === "ar" ? "الاسم بالكامل" : "Full name"}
+                </p>
+                <p className="mt-0.5 text-sm font-medium text-ivory">
+                  {user.fullName}
+                </p>
               </div>
               <div className="rounded-2xl border border-border/50 bg-background/40 p-3">
-                <p className="text-[11px] text-muted-foreground">{lang === "ar" ? "البريد الإلكتروني" : "Email"}</p>
-                <p className="mt-0.5 text-sm font-medium text-ivory">{user.email}</p>
+                <p className="text-[11px] text-muted-foreground">
+                  {lang === "ar" ? "البريد الإلكتروني" : "Email"}
+                </p>
+                <p className="mt-0.5 text-sm font-medium text-ivory">
+                  {user.email}
+                </p>
               </div>
               <div className="rounded-2xl border border-border/50 bg-background/40 p-3">
-                <p className="text-[11px] text-muted-foreground">{lang === "ar" ? "رقم الهاتف" : "Phone"}</p>
-                <p className="mt-0.5 text-sm font-medium text-ivory" dir="ltr">{user.phone}</p>
+                <p className="text-[11px] text-muted-foreground">
+                  {lang === "ar" ? "رقم الهاتف" : "Phone"}
+                </p>
+                <p className="mt-0.5 text-sm font-medium text-ivory" dir="ltr">
+                  {user.phone}
+                </p>
               </div>
               <div className="rounded-2xl border border-border/50 bg-background/40 p-3">
-                <p className="text-[11px] text-muted-foreground">{lang === "ar" ? "عضو منذ" : "Member since"}</p>
-                <p className="mt-0.5 text-sm font-medium text-ivory">{fmtDateTime(user.createdAt)}</p>
+                <p className="text-[11px] text-muted-foreground">
+                  {lang === "ar" ? "عضو منذ" : "Member since"}
+                </p>
+                <p className="mt-0.5 text-sm font-medium text-ivory">
+                  {fmtDateTime(user.createdAt)}
+                </p>
               </div>
             </div>
 
             <div className="mt-4">
-              <p className="mb-2 text-xs font-semibold text-gold">{lang === "ar" ? "لون الصورة الرمزية" : "Avatar color"}</p>
+              <p className="mb-2 text-xs font-semibold text-gold">
+                {lang === "ar" ? "لون الصورة الرمزية" : "Avatar color"}
+              </p>
               <div className="flex flex-wrap gap-2">
                 {AVATAR_PALETTE.map((c) => (
                   <button
@@ -126,13 +183,25 @@ function AccountPage() {
                     type="button"
                     onClick={() => {
                       updateUser({ avatarColor: c });
-                      toast.success(lang === "ar" ? "تم تحديث الصورة الرمزية" : "Avatar updated");
+                      toast.success(
+                        lang === "ar"
+                          ? "تم تحديث الصورة الرمزية"
+                          : "Avatar updated",
+                      );
                     }}
                     className={cn(
                       "h-9 w-9 rounded-full transition-all duration-300",
-                      user.avatarColor === c ? "ring-2 ring-gold ring-offset-2 ring-offset-background" : "hover:scale-110",
+                      user.avatarColor === c
+                        ? "ring-2 ring-gold ring-offset-2 ring-offset-background"
+                        : "hover:scale-110",
                     )}
-                    style={{ background: c, boxShadow: user.avatarColor === c ? "var(--shadow-gold)" : undefined }}
+                    style={{
+                      background: c,
+                      boxShadow:
+                        user.avatarColor === c
+                          ? "var(--shadow-gold)"
+                          : undefined,
+                    }}
                     aria-label={lang === "ar" ? "اختيار لون" : "Pick color"}
                   />
                 ))}
@@ -148,14 +217,22 @@ function AccountPage() {
               <Languages className="h-4 w-4 text-gold" />
               {lang === "ar" ? "اللغة والإعدادات" : "Language & settings"}
             </CardTitle>
-            <CardDescription>{lang === "ar" ? "تفضيلات العرض واللغة" : "Display and language"}</CardDescription>
+            <CardDescription>
+              {lang === "ar" ? "تفضيلات العرض واللغة" : "Display and language"}
+            </CardDescription>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between rounded-2xl border border-border/50 bg-background/40 p-3.5">
                 <div className="flex items-center gap-3">
                   <Languages className="h-4 w-4 text-muted-foreground" />
                   <div>
-                    <p className="text-sm text-ivory">{lang === "ar" ? "اللغة" : "Language"}</p>
-                    <p className="text-[11px] text-muted-foreground">{lang === "ar" ? "العربية / English" : "English / العربية"}</p>
+                    <p className="text-sm text-ivory">
+                      {lang === "ar" ? "اللغة" : "Language"}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {lang === "ar"
+                        ? "العربية / English"
+                        : "English / العربية"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex gap-1 rounded-full border border-border/60 p-1">
@@ -165,11 +242,15 @@ function AccountPage() {
                       type="button"
                       onClick={() => {
                         setLang(l);
-                        toast.success(l === "ar" ? "تم تغيير اللغة" : "Language changed");
+                        toast.success(
+                          l === "ar" ? "تم تغيير اللغة" : "Language changed",
+                        );
                       }}
                       className={cn(
                         "rounded-full px-3 py-1 text-xs font-semibold transition-all",
-                        lang === l ? "bg-gold/15 text-gold" : "text-muted-foreground hover:text-ivory",
+                        lang === l
+                          ? "bg-gold/15 text-gold"
+                          : "text-muted-foreground hover:text-ivory",
                       )}
                     >
                       {l === "ar" ? "ع" : "EN"}
@@ -180,15 +261,27 @@ function AccountPage() {
 
               <div className="flex items-center justify-between rounded-2xl border border-border/50 bg-background/40 p-3.5">
                 <div className="flex items-center gap-3">
-                  {isDark ? <Moon className="h-4 w-4 text-muted-foreground" /> : <Sun className="h-4 w-4 text-muted-foreground" />}
+                  {isDark ? (
+                    <Moon className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Sun className="h-4 w-4 text-muted-foreground" />
+                  )}
                   <div>
-                    <p className="text-sm text-ivory">{lang === "ar" ? "الوضع الليلي" : "Dark mode"}</p>
+                    <p className="text-sm text-ivory">
+                      {lang === "ar" ? "الوضع الليلي" : "Dark mode"}
+                    </p>
                     <p className="text-[11px] text-muted-foreground">
-                      {lang === "ar" ? "فعّل المظهر الداكن" : "Enable dark theme"}
+                      {lang === "ar"
+                        ? "فعّل المظهر الداكن"
+                        : "Enable dark theme"}
                     </p>
                   </div>
                 </div>
-                <Switch checked={isDark} onChange={toggleTheme} label="Dark mode" />
+                <Switch
+                  checked={isDark}
+                  onChange={toggleTheme}
+                  label="Dark mode"
+                />
               </div>
             </CardContent>
           </Card>
@@ -198,15 +291,25 @@ function AccountPage() {
               <Bell className="h-4 w-4 text-gold" />
               {lang === "ar" ? "الإشعارات" : "Notifications"}
             </CardTitle>
-            <CardDescription>{lang === "ar" ? "تفضيلات إشعارات المنصة" : "Platform notification preferences"}</CardDescription>
+            <CardDescription>
+              {lang === "ar"
+                ? "تفضيلات إشعارات المنصة"
+                : "Platform notification preferences"}
+            </CardDescription>
             <CardContent>
               <div className="flex items-center justify-between rounded-2xl border border-border/50 bg-background/40 p-3.5">
                 <div className="flex items-center gap-3">
                   <Mail className="h-4 w-4 text-muted-foreground" />
                   <div>
-                    <p className="text-sm text-ivory">{lang === "ar" ? "إشعارات البريد الإلكتروني" : "Email notifications"}</p>
+                    <p className="text-sm text-ivory">
+                      {lang === "ar"
+                        ? "إشعارات البريد الإلكتروني"
+                        : "Email notifications"}
+                    </p>
                     <p className="text-[11px] text-muted-foreground">
-                      {lang === "ar" ? "استقبال التحديثات والتنبيهات" : "Receive updates and alerts"}
+                      {lang === "ar"
+                        ? "استقبال التحديثات والتنبيهات"
+                        : "Receive updates and alerts"}
                     </p>
                   </div>
                 </div>
@@ -214,7 +317,11 @@ function AccountPage() {
                   checked={user.emailNotifications}
                   onChange={(v) => {
                     updateUser({ emailNotifications: v });
-                    toast.success(lang === "ar" ? "تم تحديث التفضيلات" : "Preferences updated");
+                    toast.success(
+                      lang === "ar"
+                        ? "تم تحديث التفضيلات"
+                        : "Preferences updated",
+                    );
                   }}
                   label="Email notifications"
                 />
@@ -230,7 +337,11 @@ function AccountPage() {
           <KeyRound className="h-4 w-4 text-gold" />
           {lang === "ar" ? "كلمة المرور والأمان" : "Password & security"}
         </CardTitle>
-        <CardDescription>{lang === "ar" ? "غيّر كلمة المرور الخاصة بك" : "Change your password"}</CardDescription>
+        <CardDescription>
+          {lang === "ar"
+            ? "غيّر كلمة المرور الخاصة بك"
+            : "Change your password"}
+        </CardDescription>
         <CardContent>
           <div className="grid gap-3 sm:grid-cols-2">
             <Input
@@ -262,10 +373,11 @@ function AccountPage() {
           {lang === "ar" ? "تسجيل الخروج" : "Log out"}
         </Button>
         <p className="mt-3 text-center text-[11px] text-muted-foreground">
-          {lang === "ar" ? "سيتم إنهاء جلستك وإعادتك إلى شاشة الدخول" : "Your session will end and you'll return to login"}
+          {lang === "ar"
+            ? "سيتم إنهاء جلستك وإعادتك إلى شاشة الدخول"
+            : "Your session will end and you'll return to login"}
         </p>
       </div>
     </AppShell>
   );
 }
-

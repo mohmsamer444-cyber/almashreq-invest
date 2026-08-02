@@ -24,7 +24,9 @@ export function TestimonialCarousel() {
           </div>
 
           {/* Comment */}
-          <p className="relative mt-3 min-h-[88px] text-sm leading-6 text-ivory">"{t.content}"</p>
+          <p className="relative mt-3 min-h-[88px] text-sm leading-6 text-ivory">
+            "{t.content}"
+          </p>
 
           {/* Author */}
           <div className="relative mt-5 flex items-center gap-3 border-t border-border/40 pt-4">
@@ -35,8 +37,12 @@ export function TestimonialCarousel() {
               {t.initials}
             </div>
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-ivory">{t.name}</p>
-              <p className="truncate text-[11px] text-muted-foreground">📍 {t.location}</p>
+              <p className="truncate text-sm font-semibold text-ivory">
+                {t.name}
+              </p>
+              <p className="truncate text-[11px] text-muted-foreground">
+                📍 {t.location}
+              </p>
             </div>
           </div>
         </div>
@@ -44,4 +50,3 @@ export function TestimonialCarousel() {
     </div>
   );
 }
-

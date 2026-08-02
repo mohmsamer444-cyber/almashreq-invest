@@ -1,6 +1,9 @@
-export function reportLovableError(error: Error, context: Record<string, any> = {}): void {
+export function reportLovableError(
+  error: Error,
+  context: Record<string, any> = {},
+): void {
   if (typeof window === "undefined") return;
-  
+
   const errorData = {
     message: error.message,
     stack: error.stack,
@@ -10,7 +13,7 @@ export function reportLovableError(error: Error, context: Record<string, any> = 
   };
 
   console.error("[Lovable Error]", errorData);
-  
+
   // Attempt to send to Lovable (if available)
   if (window.__lovable_error_reporter) {
     try {

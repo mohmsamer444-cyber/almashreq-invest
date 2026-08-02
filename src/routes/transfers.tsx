@@ -1,7 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { ArrowDownLeft, ArrowUpRight, Copy, Check, FileText, Image as ImageIcon, UploadCloud } from "lucide-react";
+import {
+  ArrowDownLeft,
+  ArrowUpRight,
+  Copy,
+  Check,
+  FileText,
+  Image as ImageIcon,
+  UploadCloud,
+} from "lucide-react";
 import { useStore } from "@/lib/store";
 import { useSettings } from "@/components/layout/theme";
 import { AppShell, PageHeader } from "@/components/layout/app-shell";
@@ -14,7 +22,10 @@ export const Route = createFileRoute("/transfers")({
   head: () => ({
     meta: [
       { title: "الإيداع والسحب | منصة المشرق" },
-      { name: "description", content: "قدّم طلبات الإيداع والسحب عبر وسائل دفع متعددة." },
+      {
+        name: "description",
+        content: "قدّم طلبات الإيداع والسحب عبر وسائل دفع متعددة.",
+      },
     ],
   }),
   component: TransfersPage,
@@ -36,7 +47,8 @@ const STATUS_LABEL_EN: Record<StatusKey, string> = {
 };
 
 function TransfersPage() {
-  const { user, submitDeposit, submitWithdrawal, deposits, withdrawals } = useStore();
+  const { user, submitDeposit, submitWithdrawal, deposits, withdrawals } =
+    useStore();
   const { lang } = useSettings();
   const [tab, setTab] = useState<TabKey>("deposit");
 
@@ -49,13 +61,25 @@ function TransfersPage() {
     <AppShell>
       <PageHeader
         title={lang === "ar" ? "الإيداع والسحب" : "Transfers"}
-        subtitle={lang === "ar" ? "قدّم طلبات الإيداع أو السحب وتابع حالتها" : "Submit deposit or withdrawal requests"}
+        subtitle={
+          lang === "ar"
+            ? "قدّم طلبات الإيداع أو السحب وتابع حالتها"
+            : "Submit deposit or withdrawal requests"
+        }
       />
 
       <Tabs
         tabs={[
-          { key: "deposit" as const, label: lang === "ar" ? "إيداع" : "Deposit", icon: <ArrowDownLeft className="h-4 w-4" /> },
-          { key: "withdraw" as const, label: lang === "ar" ? "سحب" : "Withdraw", icon: <ArrowUpRight className="h-4 w-4" /> },
+          {
+            key: "deposit" as const,
+            label: lang === "ar" ? "إيداع" : "Deposit",
+            icon: <ArrowDownLeft className="h-4 w-4" />,
+          },
+          {
+            key: "withdraw" as const,
+            label: lang === "ar" ? "سحب" : "Withdraw",
+            icon: <ArrowUpRight className="h-4 w-4" />,
+          },
         ]}
         value={tab}
         onChange={setTab}
@@ -63,9 +87,7 @@ function TransfersPage() {
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         {tab === "deposit" ? (
-          <DepositForm
-            onDone={() => setTab("withdraw")}
-          />
+          <DepositForm onDone={() => setTab("withdraw")} />
         ) : (
           <WithdrawForm />
         )}
@@ -88,13 +110,25 @@ function TransfersPage() {
                     className="flex items-center justify-between gap-3 rounded-2xl border border-border/50 p-3"
                   >
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-ivory">{fmtMoney(d.amount, lang)} ج.م</p>
+                      <p className="truncate text-sm font-medium text-ivory">
+                        {fmtMoney(d.amount, lang)} ج.م
+                      </p>
                       <p className="truncate text-[11px] text-muted-foreground">
                         {d.method} — {fmtDateTime(d.createdAt)}
                       </p>
                     </div>
-                    <Badge tone={d.status === "approved" ? "success" : d.status === "pending" ? "warning" : "danger"}>
-                      {lang === "ar" ? STATUS_LABEL[d.status] : STATUS_LABEL_EN[d.status]}
+                    <Badge
+                      tone={
+                        d.status === "approved"
+                          ? "success"
+                          : d.status === "pending"
+                            ? "warning"
+                            : "danger"
+                      }
+                    >
+                      {lang === "ar"
+                        ? STATUS_LABEL[d.status]
+                        : STATUS_LABEL_EN[d.status]}
                     </Badge>
                   </div>
                 ))}
@@ -118,13 +152,25 @@ function TransfersPage() {
                     className="flex items-center justify-between gap-3 rounded-2xl border border-border/50 p-3"
                   >
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-ivory">{fmtMoney(w.amount, lang)} ج.م</p>
+                      <p className="truncate text-sm font-medium text-ivory">
+                        {fmtMoney(w.amount, lang)} ج.م
+                      </p>
                       <p className="truncate text-[11px] text-muted-foreground">
                         {w.method} — {fmtDateTime(w.createdAt)}
                       </p>
                     </div>
-                    <Badge tone={w.status === "approved" ? "success" : w.status === "pending" ? "warning" : "danger"}>
-                      {lang === "ar" ? STATUS_LABEL[w.status] : STATUS_LABEL_EN[w.status]}
+                    <Badge
+                      tone={
+                        w.status === "approved"
+                          ? "success"
+                          : w.status === "pending"
+                            ? "warning"
+                            : "danger"
+                      }
+                    >
+                      {lang === "ar"
+                        ? STATUS_LABEL[w.status]
+                        : STATUS_LABEL_EN[w.status]}
                     </Badge>
                   </div>
                 ))}
@@ -137,7 +183,9 @@ function TransfersPage() {
               {lang === "ar" ? "مراحل الطلب" : "Status timeline"}
             </h3>
             <p className="mt-1 text-xs text-muted-foreground">
-              {lang === "ar" ? "مسار عملية الطلب من التقديم حتى الاعتماد" : "Request lifecycle"}
+              {lang === "ar"
+                ? "مسار عملية الطلب من التقديم حتى الاعتماد"
+                : "Request lifecycle"}
             </p>
             <div className="mt-5">
               <StatusTimeline />
@@ -168,13 +216,23 @@ function DepositForm({ onDone }: { onDone: () => void }) {
 
   const handleFile = (file?: File | null) => {
     if (!file) return;
-    const okType = ["image/png", "image/jpeg", "application/pdf"].includes(file.type);
+    const okType = ["image/png", "image/jpeg", "application/pdf"].includes(
+      file.type,
+    );
     if (!okType) {
-      toast.error(lang === "ar" ? "صيغة الملف غير مدعومة (PNG, JPG, PDF فقط)" : "Unsupported file type (PNG, JPG, PDF only)");
+      toast.error(
+        lang === "ar"
+          ? "صيغة الملف غير مدعومة (PNG, JPG, PDF فقط)"
+          : "Unsupported file type (PNG, JPG, PDF only)",
+      );
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      toast.error(lang === "ar" ? "حجم الملف يجب أن يكون أقل من 5MB" : "File must be under 5MB");
+      toast.error(
+        lang === "ar"
+          ? "حجم الملف يجب أن يكون أقل من 5MB"
+          : "File must be under 5MB",
+      );
       return;
     }
     setReceiptName(file.name);
@@ -187,15 +245,27 @@ function DepositForm({ onDone }: { onDone: () => void }) {
     e.preventDefault();
     const amountNum = parseFloat(amount);
     if (isNaN(amountNum) || amountNum < 50) {
-      toast.error(lang === "ar" ? "أدخل مبلغًا صحيحًا (الحد الأدنى 50 ج.م)" : "Enter a valid amount (min 50 EGP)");
+      toast.error(
+        lang === "ar"
+          ? "أدخل مبلغًا صحيحًا (الحد الأدنى 50 ج.م)"
+          : "Enter a valid amount (min 50 EGP)",
+      );
       return;
     }
     if (!senderPhone.trim()) {
-      toast.error(lang === "ar" ? "أدخل رقم المحفظة/الحساب" : "Enter the sender phone/account");
+      toast.error(
+        lang === "ar"
+          ? "أدخل رقم المحفظة/الحساب"
+          : "Enter the sender phone/account",
+      );
       return;
     }
     if (!receiptName) {
-      toast.error(lang === "ar" ? "ارفع إيصال التحويل (PNG/JPG/PDF)" : "Upload a receipt (PNG/JPG/PDF)");
+      toast.error(
+        lang === "ar"
+          ? "ارفع إيصال التحويل (PNG/JPG/PDF)"
+          : "Upload a receipt (PNG/JPG/PDF)",
+      );
       return;
     }
     setBusy(true);
@@ -214,7 +284,11 @@ function DepositForm({ onDone }: { onDone: () => void }) {
       setNotes("");
       setReceiptName("");
       setReceiptData("");
-      toast.success(lang === "ar" ? "تم إرسال طلب الإيداع بنجاح" : "Deposit request submitted");
+      toast.success(
+        lang === "ar"
+          ? "تم إرسال طلب الإيداع بنجاح"
+          : "Deposit request submitted",
+      );
       onDone();
     }, 700);
   };
@@ -225,12 +299,16 @@ function DepositForm({ onDone }: { onDone: () => void }) {
         {lang === "ar" ? "طلب إيداع جديد" : "New deposit"}
       </h3>
       <p className="mt-1 text-xs text-muted-foreground">
-        {lang === "ar" ? `رصيدك بعد الاعتماد سيُحدَّث تلقائيًا من الإدارة` : `Balance updates after approval`}
+        {lang === "ar"
+          ? `رصيدك بعد الاعتماد سيُحدَّث تلقائيًا من الإدارة`
+          : `Balance updates after approval`}
       </p>
 
       {/* Method selection */}
       <div className="mt-5">
-        <p className="mb-3 text-xs font-semibold text-gold">{lang === "ar" ? "وسيلة الدفع" : "Payment method"}</p>
+        <p className="mb-3 text-xs font-semibold text-gold">
+          {lang === "ar" ? "وسيلة الدفع" : "Payment method"}
+        </p>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {PAYMENT_METHODS.map((m) => (
             <button
@@ -245,7 +323,12 @@ function DepositForm({ onDone }: { onDone: () => void }) {
               )}
             >
               <span className="block text-xl">{m.icon}</span>
-              <span className={cn("mt-1 block text-[11px] font-medium", methodId === m.id ? "text-gold" : "text-muted-foreground")}>
+              <span
+                className={cn(
+                  "mt-1 block text-[11px] font-medium",
+                  methodId === m.id ? "text-gold" : "text-muted-foreground",
+                )}
+              >
                 {lang === "ar" ? m.labelAr : m.labelEn}
               </span>
             </button>
@@ -277,7 +360,9 @@ function DepositForm({ onDone }: { onDone: () => void }) {
         {/* Receipt upload */}
         <div>
           <p className="mb-2 block text-xs font-medium text-muted-foreground">
-            {lang === "ar" ? "إيصال التحويل (مطلوب)" : "Transfer receipt (required)"}
+            {lang === "ar"
+              ? "إيصال التحويل (مطلوب)"
+              : "Transfer receipt (required)"}
           </p>
           <div
             onDragOver={(e) => {
@@ -293,7 +378,9 @@ function DepositForm({ onDone }: { onDone: () => void }) {
             onClick={() => fileRef.current?.click()}
             className={cn(
               "relative flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed p-8 text-center transition-all duration-300",
-              dragging ? "border-gold bg-gold/5" : "border-border/60 hover:border-gold/40 hover:bg-gold/5",
+              dragging
+                ? "border-gold bg-gold/5"
+                : "border-border/60 hover:border-gold/40 hover:bg-gold/5",
             )}
           >
             <input
@@ -308,7 +395,9 @@ function DepositForm({ onDone }: { onDone: () => void }) {
                 <span className="grid h-12 w-12 place-items-center rounded-2xl bg-success/10 text-success">
                   <FileText className="h-6 w-6" />
                 </span>
-                <p className="text-sm font-semibold text-success">{receiptName}</p>
+                <p className="text-sm font-semibold text-success">
+                  {receiptName}
+                </p>
                 <p className="text-[11px] text-muted-foreground">
                   {lang === "ar" ? "اضغط للتغيير" : "Click to change"}
                 </p>
@@ -319,9 +408,13 @@ function DepositForm({ onDone }: { onDone: () => void }) {
                   <UploadCloud className="h-6 w-6" />
                 </span>
                 <p className="text-sm font-semibold text-ivory">
-                  {lang === "ar" ? "اسحب الملف هنا أو اضغط للاختيار" : "Drag & drop or click"}
+                  {lang === "ar"
+                    ? "اسحب الملف هنا أو اضغط للاختيار"
+                    : "Drag & drop or click"}
                 </p>
-                <p className="text-[11px] text-muted-foreground">PNG · JPG · PDF — max 5MB</p>
+                <p className="text-[11px] text-muted-foreground">
+                  PNG · JPG · PDF — max 5MB
+                </p>
               </>
             )}
           </div>
@@ -332,18 +425,32 @@ function DepositForm({ onDone }: { onDone: () => void }) {
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
-          placeholder={lang === "ar" ? "أي تفاصيل إضافية" : "Any additional details"}
+          placeholder={
+            lang === "ar" ? "أي تفاصيل إضافية" : "Any additional details"
+          }
         />
       </div>
 
       <Button fullWidth className="mt-6" disabled={busy} type="submit">
-        {busy ? <span className="skeleton h-4 w-20 rounded-full" /> : lang === "ar" ? "إرسال طلب الإيداع" : "Submit deposit"}
+        {busy ? (
+          <span className="skeleton h-4 w-20 rounded-full" />
+        ) : lang === "ar" ? (
+          "إرسال طلب الإيداع"
+        ) : (
+          "Submit deposit"
+        )}
       </Button>
     </form>
   );
 }
 
-function PaymentAccountCard({ methodId, lang }: { methodId: string; lang: "ar" | "en" }) {
+function PaymentAccountCard({
+  methodId,
+  lang,
+}: {
+  methodId: string;
+  lang: "ar" | "en";
+}) {
   const [copied, setCopied] = useState<"number" | "name" | null>(null);
   const method = PAYMENT_METHODS.find((m) => m.id === methodId)!;
 
@@ -367,11 +474,17 @@ function PaymentAccountCard({ methodId, lang }: { methodId: string; lang: "ar" |
   return (
     <div className="mt-4 overflow-hidden rounded-2xl border border-gold/25 bg-gradient-to-b from-gold/10 to-transparent">
       <div className="flex items-center gap-3 border-b border-gold/15 px-4 py-3">
-        <span className="grid h-10 w-10 place-items-center rounded-xl bg-background/50 text-lg">{method.icon}</span>
+        <span className="grid h-10 w-10 place-items-center rounded-xl bg-background/50 text-lg">
+          {method.icon}
+        </span>
         <div className="min-w-0">
-          <p className="text-xs font-semibold text-gold">{lang === "ar" ? method.labelAr : method.labelEn}</p>
+          <p className="text-xs font-semibold text-gold">
+            {lang === "ar" ? method.labelAr : method.labelEn}
+          </p>
           <p className="text-[10px] text-muted-foreground">
-            {lang === "ar" ? "تحوّل إلى هذا الحساب" : "Transfer to this account"}
+            {lang === "ar"
+              ? "تحوّل إلى هذا الحساب"
+              : "Transfer to this account"}
           </p>
         </div>
       </div>
@@ -380,8 +493,15 @@ function PaymentAccountCard({ methodId, lang }: { methodId: string; lang: "ar" |
         {/* Account number */}
         <div className="flex items-center justify-between gap-2 rounded-xl bg-background/50 px-3 py-2.5">
           <div className="min-w-0">
-            <p className="text-[10px] text-muted-foreground">{lang === "ar" ? "رقم الحساب" : "Account number"}</p>
-            <p className="truncate font-mono text-sm font-semibold text-ivory" dir="ltr">{method.accountNumber}</p>
+            <p className="text-[10px] text-muted-foreground">
+              {lang === "ar" ? "رقم الحساب" : "Account number"}
+            </p>
+            <p
+              className="truncate font-mono text-sm font-semibold text-ivory"
+              dir="ltr"
+            >
+              {method.accountNumber}
+            </p>
           </div>
           <button
             type="button"
@@ -389,15 +509,23 @@ function PaymentAccountCard({ methodId, lang }: { methodId: string; lang: "ar" |
             className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-gold/30 text-gold transition-colors hover:bg-gold/10"
             aria-label="copy account number"
           >
-            {copied === "number" ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+            {copied === "number" ? (
+              <Check className="h-3.5 w-3.5" />
+            ) : (
+              <Copy className="h-3.5 w-3.5" />
+            )}
           </button>
         </div>
 
         {/* Account holder name */}
         <div className="flex items-center justify-between gap-2 rounded-xl bg-background/50 px-3 py-2.5">
           <div className="min-w-0">
-            <p className="text-[10px] text-muted-foreground">{lang === "ar" ? "اسم المستفيد" : "Account holder"}</p>
-            <p className="truncate text-sm font-semibold text-ivory">{method.accountName}</p>
+            <p className="text-[10px] text-muted-foreground">
+              {lang === "ar" ? "اسم المستفيد" : "Account holder"}
+            </p>
+            <p className="truncate text-sm font-semibold text-ivory">
+              {method.accountName}
+            </p>
           </div>
           <button
             type="button"
@@ -405,7 +533,11 @@ function PaymentAccountCard({ methodId, lang }: { methodId: string; lang: "ar" |
             className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-gold/30 text-gold transition-colors hover:bg-gold/10"
             aria-label="copy account holder name"
           >
-            {copied === "name" ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+            {copied === "name" ? (
+              <Check className="h-3.5 w-3.5" />
+            ) : (
+              <Copy className="h-3.5 w-3.5" />
+            )}
           </button>
         </div>
       </div>
@@ -440,7 +572,11 @@ function WithdrawForm() {
       return;
     }
     if (isNaN(amountNum) || amountNum < 50) {
-      toast.error(lang === "ar" ? "أدخل مبلغًا صحيحًا (الحد الأدنى 50 ج.م)" : "Enter a valid amount (min 50 EGP)");
+      toast.error(
+        lang === "ar"
+          ? "أدخل مبلغًا صحيحًا (الحد الأدنى 50 ج.م)"
+          : "Enter a valid amount (min 50 EGP)",
+      );
       return;
     }
     if (amountNum > user.balance) {
@@ -448,7 +584,9 @@ function WithdrawForm() {
       return;
     }
     if (!destination.trim()) {
-      toast.error(lang === "ar" ? "أدخل حساب الوجهة" : "Enter destination account");
+      toast.error(
+        lang === "ar" ? "أدخل حساب الوجهة" : "Enter destination account",
+      );
       return;
     }
     setBusy(true);
@@ -465,20 +603,37 @@ function WithdrawForm() {
       setAmount("");
       setDestination("");
       setNotes("");
-      toast.success(lang === "ar" ? "تم إرسال طلب السحب بنجاح" : "Withdrawal request submitted");
+      toast.success(
+        lang === "ar"
+          ? "تم إرسال طلب السحب بنجاح"
+          : "Withdrawal request submitted",
+      );
     }, 700);
   };
 
   return (
     <form onSubmit={submit} className="rounded-3xl glass p-5 sm:p-6">
-      <h3 className="font-display text-base text-ivory sm:text-lg">{lang === "ar" ? "طلب سحب جديد" : "New withdrawal"}</h3>
+      <h3 className="font-display text-base text-ivory sm:text-lg">
+        {lang === "ar" ? "طلب سحب جديد" : "New withdrawal"}
+      </h3>
       <p className="mt-1 text-xs text-muted-foreground">
-        {lang === "ar" ? `الرصيد المتاح: ${fmtMoney(user.balance, lang)} ج.م` : `Available: ${fmtMoney(user.balance, lang)} EGP`}
+        {lang === "ar"
+          ? `الرصيد المتاح: ${fmtMoney(user.balance, lang)} ج.م`
+          : `Available: ${fmtMoney(user.balance, lang)} EGP`}
       </p>
 
       <div className="mt-5 space-y-4">
-        <Input label={lang === "ar" ? "الاسم بالكامل" : "Full name"} value={fullName} onChange={(e) => setFullName(e.target.value)} />
-        <Input label={lang === "ar" ? "رقم الهاتف" : "Phone"} value={phone} onChange={(e) => setPhone(e.target.value)} dir="ltr" />
+        <Input
+          label={lang === "ar" ? "الاسم بالكامل" : "Full name"}
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+        />
+        <Input
+          label={lang === "ar" ? "رقم الهاتف" : "Phone"}
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          dir="ltr"
+        />
         <Input
           label={lang === "ar" ? "المبلغ (ج.م)" : "Amount (EGP)"}
           value={amount}
@@ -488,7 +643,9 @@ function WithdrawForm() {
         />
 
         <div>
-          <p className="mb-3 text-xs font-semibold text-gold">{lang === "ar" ? "طريقة الاستلام" : "Withdrawal method"}</p>
+          <p className="mb-3 text-xs font-semibold text-gold">
+            {lang === "ar" ? "طريقة الاستلام" : "Withdrawal method"}
+          </p>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {PAYMENT_METHODS.map((m) => (
               <button
@@ -503,7 +660,12 @@ function WithdrawForm() {
                 )}
               >
                 <span className="block text-xl">{m.icon}</span>
-                <span className={cn("mt-1 block text-[11px] font-medium", methodId === m.id ? "text-gold" : "text-muted-foreground")}>
+                <span
+                  className={cn(
+                    "mt-1 block text-[11px] font-medium",
+                    methodId === m.id ? "text-gold" : "text-muted-foreground",
+                  )}
+                >
                   {lang === "ar" ? m.labelAr : m.labelEn}
                 </span>
               </button>
@@ -523,14 +685,21 @@ function WithdrawForm() {
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
-          placeholder={lang === "ar" ? "أي تفاصيل إضافية" : "Any additional details"}
+          placeholder={
+            lang === "ar" ? "أي تفاصيل إضافية" : "Any additional details"
+          }
         />
       </div>
 
       <Button fullWidth className="mt-6" disabled={busy} type="submit">
-        {busy ? <span className="skeleton h-4 w-20 rounded-full" /> : lang === "ar" ? "إرسال طلب السحب" : "Submit withdrawal"}
+        {busy ? (
+          <span className="skeleton h-4 w-20 rounded-full" />
+        ) : lang === "ar" ? (
+          "إرسال طلب السحب"
+        ) : (
+          "Submit withdrawal"
+        )}
       </Button>
     </form>
   );
 }
-

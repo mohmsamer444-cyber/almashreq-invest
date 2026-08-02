@@ -5,9 +5,11 @@ export const Route = createFileRoute("/investment")({
   head: () => ({
     meta: [
       { title: "باقات الاستثمار | حساب المشرق" },
-      { name: "description", content: "استثمر في ٧ باقات متدرجة بعوائد يومية تصل إلى ١٫٨٪." },
+      {
+        name: "description",
+        content: "استثمر في ٧ باقات متدرجة بعوائد يومية تصل إلى ١٫٨٪.",
+      },
     ],
   }),
   component: PackagesPage,
 });
-

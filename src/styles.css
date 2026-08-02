@@ -115,9 +115,22 @@
   --sidebar-border: oklch(0.27 0.006 262 / 50%);
   --sidebar-ring: oklch(0.76 0.14 74 / 45%);
 
-  --gradient-gold: linear-gradient(135deg, oklch(0.78 0.14 80) 0%, oklch(0.68 0.13 62) 100%);
-  --gradient-emerald: linear-gradient(135deg, oklch(0.62 0.13 163) 0%, oklch(0.72 0.07 168) 100%);
-  --gradient-panel: linear-gradient(150deg, oklch(1 0 0 / 8%), oklch(1 0 0 / 2%) 45%, oklch(0 0 0 / 12%));
+  --gradient-gold: linear-gradient(
+    135deg,
+    oklch(0.78 0.14 80) 0%,
+    oklch(0.68 0.13 62) 100%
+  );
+  --gradient-emerald: linear-gradient(
+    135deg,
+    oklch(0.62 0.13 163) 0%,
+    oklch(0.72 0.07 168) 100%
+  );
+  --gradient-panel: linear-gradient(
+    150deg,
+    oklch(1 0 0 / 8%),
+    oklch(1 0 0 / 2%) 45%,
+    oklch(0 0 0 / 12%)
+  );
   --shadow-cinematic: 0 30px 80px -30px oklch(0 0 0 / 80%);
   --shadow-gold: 0 18px 60px -22px oklch(0.78 0.14 80 / 50%);
   --shadow-emerald: 0 18px 60px -22px oklch(0.62 0.13 163 / 45%);
@@ -177,9 +190,22 @@
   --sidebar-border: oklch(0.87 0.008 97 / 70%);
   --sidebar-ring: oklch(0.62 0.14 68 / 40%);
 
-  --gradient-gold: linear-gradient(135deg, oklch(0.72 0.14 74) 0%, oklch(0.6 0.13 62) 100%);
-  --gradient-emerald: linear-gradient(135deg, oklch(0.55 0.11 165) 0%, oklch(0.68 0.07 168) 100%);
-  --gradient-panel: linear-gradient(150deg, oklch(0 0 0 / 4%), oklch(1 0 0 / 1%) 45%, oklch(1 0 0 / 20%));
+  --gradient-gold: linear-gradient(
+    135deg,
+    oklch(0.72 0.14 74) 0%,
+    oklch(0.6 0.13 62) 100%
+  );
+  --gradient-emerald: linear-gradient(
+    135deg,
+    oklch(0.55 0.11 165) 0%,
+    oklch(0.68 0.07 168) 100%
+  );
+  --gradient-panel: linear-gradient(
+    150deg,
+    oklch(0 0 0 / 4%),
+    oklch(1 0 0 / 1%) 45%,
+    oklch(1 0 0 / 20%)
+  );
   --shadow-cinematic: 0 30px 80px -40px oklch(0.2 0.01 262 / 30%);
   --shadow-gold: 0 18px 60px -22px oklch(0.6 0.14 68 / 35%);
   --shadow-emerald: 0 18px 60px -22px oklch(0.55 0.11 165 / 30%);
@@ -210,15 +236,31 @@
     font-weight: 400;
     line-height: 1.6;
     background-image:
-      radial-gradient(900px 500px at 85% -10%, oklch(0.76 0.14 74 / 7%), transparent 60%),
-      radial-gradient(800px 600px at 5% 10%, oklch(0.62 0.13 163 / 10%), transparent 65%);
+      radial-gradient(
+        900px 500px at 85% -10%,
+        oklch(0.76 0.14 74 / 7%),
+        transparent 60%
+      ),
+      radial-gradient(
+        800px 600px at 5% 10%,
+        oklch(0.62 0.13 163 / 10%),
+        transparent 65%
+      );
     background-attachment: fixed;
   }
 
   .light body {
     background-image:
-      radial-gradient(900px 500px at 85% -10%, oklch(0.6 0.14 68 / 7%), transparent 60%),
-      radial-gradient(800px 600px at 5% 10%, oklch(0.55 0.11 165 / 8%), transparent 65%);
+      radial-gradient(
+        900px 500px at 85% -10%,
+        oklch(0.6 0.14 68 / 7%),
+        transparent 60%
+      ),
+      radial-gradient(
+        800px 600px at 5% 10%,
+        oklch(0.55 0.11 165 / 8%),
+        transparent 65%
+      );
   }
 
   h1,
@@ -315,7 +357,12 @@
 
 @utility gold-line {
   height: 1px;
-  background: linear-gradient(90deg, transparent, oklch(0.78 0.14 80 / 70%), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    oklch(0.78 0.14 80 / 70%),
+    transparent
+  );
 }
 
 @utility shine {
@@ -328,7 +375,12 @@
     inset-inline-start: -120%;
     width: 60%;
     height: 100%;
-    background: linear-gradient(100deg, transparent, oklch(1 0 0 / 16%), transparent);
+    background: linear-gradient(
+      100deg,
+      transparent,
+      oklch(1 0 0 / 16%),
+      transparent
+    );
     transform: skewX(-18deg);
     transition: inset-inline-start 0.85s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: inset-inline-start;
@@ -340,24 +392,36 @@
 
 @utility lift {
   transition:
-    transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1),
-    box-shadow 0.5s cubic-bezier(0.25, 0.8, 0.25, 1),
-    border-color 0.5s ease;
+    transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+    border-color 0.35s ease;
   will-change: transform, box-shadow, border-color;
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 24px 48px -12px oklch(0.76 0.14 74 / 30%);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px -12px oklch(0.76 0.14 74 / 30%);
     border-color: oklch(0.76 0.14 74 / 50%);
   }
   &:active {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
   }
 }
 
 @utility geo-texture {
   background-image:
-    linear-gradient(30deg, oklch(1 0 0 / 3%) 12%, transparent 12.5%, transparent 87%, oklch(1 0 0 / 3%) 87.5%),
-    linear-gradient(150deg, oklch(1 0 0 / 3%) 12%, transparent 12.5%, transparent 87%, oklch(1 0 0 / 3%) 87.5%);
+    linear-gradient(
+      30deg,
+      oklch(1 0 0 / 3%) 12%,
+      transparent 12.5%,
+      transparent 87%,
+      oklch(1 0 0 / 3%) 87.5%
+    ),
+    linear-gradient(
+      150deg,
+      oklch(1 0 0 / 3%) 12%,
+      transparent 12.5%,
+      transparent 87%,
+      oklch(1 0 0 / 3%) 87.5%
+    );
   background-size: 42px 74px;
 }
 
@@ -366,7 +430,7 @@
 @keyframes reveal-up {
   from {
     opacity: 0;
-    transform: translateY(26px);
+    transform: translateY(22px);
   }
   to {
     opacity: 1;
@@ -427,11 +491,20 @@
 @keyframes scale-in {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.94) translateY(10px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes modal-backdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -442,11 +515,11 @@
 }
 
 @utility animate-reveal {
-  animation: reveal-up 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: reveal-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @utility animate-fade-blur {
-  animation: fade-blur 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: fade-blur 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @utility animate-float-slow {
@@ -462,7 +535,19 @@
 }
 
 @utility animate-scale-in {
-  animation: scale-in 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+  animation: scale-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@utility animate-modal-backdrop {
+  animation: modal-backdrop 0.22s ease both;
+}
+
+@utility animate-page-enter {
+  animation: fade-up 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@utility animate-card-stagger {
+  animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @utility skeleton {
@@ -474,9 +559,148 @@
     position: absolute;
     inset: 0;
     transform: translateX(-100%);
-    background: linear-gradient(90deg, transparent, oklch(1 0 0 / 8%), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      oklch(1 0 0 / 8%),
+      transparent
+    );
     animation: shimmer 1.6s infinite;
   }
+}
+
+/* ---------- Premium Banking Auth ---------- */
+
+@utility auth-bg {
+  background:
+    radial-gradient(
+      1200px 600px at 80% -10%,
+      oklch(0.76 0.14 74 / 8%),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 500px at 10% 110%,
+      oklch(0.62 0.13 163 / 6%),
+      transparent 60%
+    ),
+    linear-gradient(180deg, #0b1220 0%, #101828 50%, #1a1f36 100%);
+}
+
+@utility hero-glow {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -14px;
+    border-radius: 40px;
+    background: radial-gradient(
+      60% 60% at 50% 50%,
+      oklch(0.78 0.14 80 / 22%),
+      transparent 70%
+    );
+    filter: blur(24px);
+    z-index: -1;
+    pointer-events: none;
+  }
+}
+
+@utility gold-btn {
+  background-image: linear-gradient(135deg, #f8d76b 0%, #d4af37 100%);
+  box-shadow:
+    0 10px 30px -8px oklch(0.78 0.14 80 / 45%),
+    inset 0 1px 0 oklch(1 0 0 / 30%);
+  transition:
+    transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
+    filter 0.25s ease;
+  &:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow:
+      0 16px 40px -10px oklch(0.78 0.14 80 / 60%),
+      inset 0 1px 0 oklch(1 0 0 / 30%);
+    filter: brightness(1.07);
+  }
+  &:active:not(:disabled) {
+    transform: translateY(-1px) scale(0.99);
+  }
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+@utility auth-input {
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+  &:focus-within {
+    border-color: oklch(0.78 0.14 80 / 60%);
+    box-shadow: 0 0 0 4px oklch(0.78 0.14 80 / 12%);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes card-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes success-pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 24px -6px oklch(0.78 0.14 80 / 30%);
+  }
+  50% {
+    box-shadow: 0 0 40px -4px oklch(0.78 0.14 80 / 50%);
+  }
+}
+
+@utility animate-fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@utility animate-card-enter {
+  animation: card-enter 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@utility animate-success-pop {
+  animation: success-pop 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@utility animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -488,4 +712,3 @@
     transition-duration: 0.01ms !important;
   }
 }
-

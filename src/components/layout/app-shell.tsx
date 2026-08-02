@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { Bell, LogOut, Menu, X, Moon, Sun } from "lucide-react";
 import { useState } from "react";
 import { useStore } from "@/lib/store";
@@ -13,11 +13,14 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { user, logout, notifications } = useStore();
   const { lang, isDark, toggleTheme } = useSettings();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [mobileMenu, setMobileMenu] = useState(false);
 
   if (!user) return null;
 
-  const unread = notifications.filter((n) => n.userId === user.id || n.userId === "all").filter((n) => !n.read).length;
+  const unread = notifications
+    .filter((n) => n.userId === user.id || n.userId === "all")
+    .filter((n) => !n.read).length;
 
   const handleLogout = () => {
     logout();
@@ -41,7 +44,11 @@ export function AppShell({ children }: { children: ReactNode }) {
               className="grid h-9 w-9 place-items-center rounded-full text-muted-foreground transition-colors hover:text-gold"
               aria-label="Theme"
             >
-              {isDark ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
+              {isDark ? (
+                <Sun className="h-[18px] w-[18px]" />
+              ) : (
+                <Moon className="h-[18px] w-[18px]" />
+              )}
             </button>
             <Link
               to="/notifications"
@@ -58,7 +65,11 @@ export function AppShell({ children }: { children: ReactNode }) {
               className="grid h-9 w-9 place-items-center rounded-full text-muted-foreground transition-colors hover:text-gold"
               aria-label="Menu"
             >
-              {mobileMenu ? <X className="h-[18px] w-[18px]" /> : <Menu className="h-[18px] w-[18px]" />}
+              {mobileMenu ? (
+                <X className="h-[18px] w-[18px]" />
+              ) : (
+                <Menu className="h-[18px] w-[18px]" />
+              )}
             </button>
           </div>
         </div>
@@ -73,8 +84,12 @@ export function AppShell({ children }: { children: ReactNode }) {
                 {initials(user.fullName)}
               </div>
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-ivory">{user.fullName}</p>
-                <p className="truncate text-[11px] text-muted-foreground">{user.email}</p>
+                <p className="truncate text-sm font-semibold text-ivory">
+                  {user.fullName}
+                </p>
+                <p className="truncate text-[11px] text-muted-foreground">
+                  {user.email}
+                </p>
               </div>
             </div>
             <button
@@ -89,8 +104,14 @@ export function AppShell({ children }: { children: ReactNode }) {
       </header>
 
       <main className="md:ms-[270px]">
-        <div className={cn("mx-auto max-w-6xl px-4 pb-28 pt-8 sm:px-6 md:pb-12 lg:px-10")}>
-          {children}
+        <div
+          className={cn(
+            "mx-auto max-w-6xl px-4 pb-28 pt-8 sm:px-6 md:pb-12 lg:px-10",
+          )}
+        >
+          <div key={pathname} className="animate-page-enter">
+            {children}
+          </div>
         </div>
       </main>
 
@@ -99,13 +120,27 @@ export function AppShell({ children }: { children: ReactNode }) {
   );
 }
 
-export function PageHeader({ title, subtitle, children }: { title: string; subtitle?: string; children?: ReactNode }) {
+export function PageHeader({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  children?: ReactNode;
+}) {
   return (
     <div className="mb-8 animate-reveal">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-3xl font-bold text-ivory sm:text-4xl">{title}</h1>
-          {subtitle && <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">{subtitle}</p>}
+          <h1 className="font-display text-3xl font-bold text-ivory sm:text-4xl">
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+              {subtitle}
+            </p>
+          )}
         </div>
         {children}
       </div>
@@ -113,4 +148,3 @@ export function PageHeader({ title, subtitle, children }: { title: string; subti
     </div>
   );
 }
-

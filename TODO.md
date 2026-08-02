@@ -1,26 +1,31 @@
-# Al-Mashreq Platform — Fix Remaining Issues Checklist
+# Deposit Workflow — Task Checklist
 
-## Content & UX Fixes
-- [x] Home heading: "أهلاً بك في حساب المشرق" + subtitle "إدارة استثماراتك وأرباحك بكل سهولة وأمان."
-- [x] Hero banner image (`public/images/hero-banner.jpg`) with fallback
-- [x] Fix `/invest` (real packages page, no "Hello")
-- [x] Fix `/wallet` (real wallet page, no "Hello")
-- [x] Add `/investment` route (same packages page)
-- [x] "اكتشف الباقات" navigates to `/investment`
-- [x] Payment methods: icon + account number + holder name + copy button
-- [x] Receipt upload works (keep existing)
-- [x] Statistics: animated counters (investors, investments, withdrawals, daily profit)
-- [x] Testimonials: 8+ Arabic reviews (already in constants — verify display)
-- [x] Packages: premium cards, hover, gradient, gold, calculator, expected profit, duration
-- [x] Wallet: balance, pending profit, total profit, active package, history, charts
-- [x] Profile: photo, name, phone, password, language, theme, logout (verify)
+## Goal
+Stop instant package activation on "اشترك الآن". Always open a Premium Deposit Modal → create Pending Deposit Request → Admin approves (adds balance + notification) → User then subscribes using wallet balance.
 
-## Production Checks
-- [x] `npx tsc --noEmit` — zero errors
-- [x] `npm run build` — succeeds, no errors
-- [x] Dev server: every route HTTP 200, no "Hello", no blank pages, no console errors
-- [x] Commit all changes
-- [x] Push to `origin/main`
-- [ ] Vercel deployment Ready
-- [ ] Live site verified
+## Steps
+- [x] 1. Rewrite `src/routes/admin.deposits.tsx` — complete Admin Deposit Requests page:
+  - Admin-only guard
+  - Stat cards (pending / approved / rejected / total approved)
+  - Search + status filter
+  - Request list with receipt preview
+  - Approve / Reject actions
+- [x] 2. UI polish in `src/styles.css`:
+  - Faster page transitions
+  - Smoother modal animations
+  - Card stagger entrance utility
+  - Better button hover effects
+  - No layout jumping / stable cards
+  - Preserve premium dark + gold design
+- [x] 3. UI polish in `src/components/packages-page.tsx`:
+  - Staggered card entrance animations
+  - Smooth modal improvements
+  - Verify "اشترك الآن" ALWAYS opens Deposit Modal (never instant activation)
+  - Verify subscribe flow only activates when wallet balance >= price (with confirmation dialog)
+- [x] 4. TypeScript check (`npx tsc --noEmit`) — zero errors
+- [x] 5. Production build (`npm run build`) — succeeds
+- [x] 6. Test all routes (HTTP 200, no "Hello", no blank pages)
+- [ ] 7. Commit changes
+- [ ] 8. Push to `origin/main`
+- [ ] 9. Verify live Vercel deployment
 

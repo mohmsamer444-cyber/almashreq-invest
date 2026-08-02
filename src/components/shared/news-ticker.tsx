@@ -22,7 +22,9 @@ export function NewsTicker() {
         </span>
         <div>
           <p className="font-display text-base text-ivory">آخر الأخبار</p>
-          <p className="text-[11px] text-muted-foreground">تحديثات المنصة والسوق</p>
+          <p className="text-[11px] text-muted-foreground">
+            تحديثات المنصة والسوق
+          </p>
         </div>
         <span className="ms-auto rounded-full bg-gold/10 px-3 py-1 text-[10px] font-semibold text-gold">
           {item.category}
@@ -30,9 +32,15 @@ export function NewsTicker() {
       </div>
 
       <div className="mt-5 min-h-[84px]">
-        <h3 className="text-sm font-semibold leading-6 text-ivory sm:text-base">{item.title}</h3>
-        <p className="mt-2 text-xs leading-6 text-muted-foreground sm:text-sm">{item.body}</p>
-        <p className="mt-2 text-[11px] text-muted-foreground/70">{timeAgo(item.date)}</p>
+        <h3 className="text-sm font-semibold leading-6 text-ivory sm:text-base">
+          {item.title}
+        </h3>
+        <p className="mt-2 text-xs leading-6 text-muted-foreground sm:text-sm">
+          {item.body}
+        </p>
+        <p className="mt-2 text-[11px] text-muted-foreground/70">
+          {timeAgo(item.date)}
+        </p>
       </div>
 
       <div className="mt-4 flex items-center gap-1.5">
@@ -50,4 +58,3 @@ export function NewsTicker() {
     </div>
   );
 }
-

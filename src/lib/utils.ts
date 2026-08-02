@@ -1,4 +1,6 @@
-export function cn(...classes: Array<string | false | null | undefined>): string {
+export function cn(
+  ...classes: Array<string | false | null | undefined>
+): string {
   return classes.filter(Boolean).join(" ");
 }
 
@@ -10,7 +12,11 @@ export const fmtMoney = (n: number, lang: "ar" | "en" = "ar"): string =>
   lang === "ar" ? n.toLocaleString("ar-EG") : n.toLocaleString("en-US");
 
 export const fmtDate = (d: string | Date): string =>
-  new Date(d).toLocaleDateString("ar-EG", { year: "numeric", month: "short", day: "numeric" });
+  new Date(d).toLocaleDateString("ar-EG", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 
 export const fmtDateTime = (d: string | Date): string =>
   new Date(d).toLocaleString("ar-EG", {
@@ -42,7 +48,8 @@ export function uid(prefix = "id"): string {
 export function initials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
   const first = parts[0]?.charAt(0) ?? "";
-  const last = parts.length > 1 ? parts[parts.length - 1]?.charAt(0) ?? "" : "";
+  const last =
+    parts.length > 1 ? (parts[parts.length - 1]?.charAt(0) ?? "") : "";
   return (first + last).toUpperCase();
 }
 
@@ -54,4 +61,3 @@ export const AVATAR_COLORS = [
   "linear-gradient(135deg,#e67e22,#935116)",
   "linear-gradient(135deg,#16a085,#0e4d41)",
 ];
-

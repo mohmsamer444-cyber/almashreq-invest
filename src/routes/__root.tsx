@@ -18,9 +18,15 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="font-display text-8xl font-bold text-gold-gradient">٤٠٤</h1>
-        <h2 className="mt-4 font-display text-xl text-ivory">الصفحة غير موجودة</h2>
-        <p className="mt-2 text-sm text-muted-foreground">الرابط الذي تبحث عنه غير متاح أو تم نقله.</p>
+        <h1 className="font-display text-8xl font-bold text-gold-gradient">
+          ٤٠٤
+        </h1>
+        <h2 className="mt-4 font-display text-xl text-ivory">
+          الصفحة غير موجودة
+        </h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          الرابط الذي تبحث عنه غير متاح أو تم نقله.
+        </p>
         <Link
           to="/"
           className="mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold text-graphite"
@@ -39,7 +45,9 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
         <h1 className="font-display text-xl text-ivory">تعذّر تحميل الصفحة</h1>
-        <p className="mt-2 text-sm text-muted-foreground">حدث خطأ غير متوقع، جرّب إعادة المحاولة.</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          حدث خطأ غير متوقع، جرّب إعادة المحاولة.
+        </p>
         <button
           onClick={reset}
           className="mt-6 rounded-full px-6 py-3 text-sm font-semibold text-graphite"
@@ -52,31 +60,44 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "منصة المشرق | Al-Mashreq Platform" },
-      { name: "description", content: "منصة المشرق — منصة متكاملة لإدارة المحافظ الاستثمارية بتجربة فاخرة." },
-      { property: "og:type", content: "website" },
-      { name: "theme-color", content: "#101014" },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap",
-      },
-    ],
-  }),
-  shellComponent: RootShell,
-  component: RootComponent,
-  notFoundComponent: NotFoundComponent,
-  errorComponent: ErrorComponent,
-});
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
+  {
+    head: () => ({
+      meta: [
+        { charSet: "utf-8" },
+        {
+          name: "viewport",
+          content: "width=device-width, initial-scale=1, viewport-fit=cover",
+        },
+        { title: "منصة المشرق | Al-Mashreq Platform" },
+        {
+          name: "description",
+          content:
+            "منصة المشرق — منصة متكاملة لإدارة المحافظ الاستثمارية بتجربة فاخرة.",
+        },
+        { property: "og:type", content: "website" },
+        { name: "theme-color", content: "#101014" },
+      ],
+      links: [
+        { rel: "stylesheet", href: appCss },
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        {
+          rel: "preconnect",
+          href: "https://fonts.gstatic.com",
+          crossOrigin: "anonymous",
+        },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap",
+        },
+      ],
+    }),
+    shellComponent: RootShell,
+    component: RootComponent,
+    notFoundComponent: NotFoundComponent,
+    errorComponent: ErrorComponent,
+  },
+);
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
@@ -95,7 +116,8 @@ function RootShell({ children }: { children: ReactNode }) {
 function AuthGuard({ children }: { children: ReactNode }) {
   const { user } = useStore();
   const navigate = useNavigate();
-  const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
+  const pathname =
+    typeof window !== "undefined" ? window.location.pathname : "/";
 
   const isAuthPage = pathname === "/auth";
 
@@ -132,4 +154,3 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
-

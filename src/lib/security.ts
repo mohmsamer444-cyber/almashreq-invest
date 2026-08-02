@@ -22,7 +22,10 @@ export function genSalt(): string {
     .join("");
 }
 
-export async function hashPassword(password: string, salt: string): Promise<string> {
+export async function hashPassword(
+  password: string,
+  salt: string,
+): Promise<string> {
   let hash = `${salt}:${password}`;
   for (let i = 0; i < 1000; i++) {
     hash = await sha256(hash);
@@ -30,7 +33,9 @@ export async function hashPassword(password: string, salt: string): Promise<stri
   return hash;
 }
 
-export async function hashPasswordNew(password: string): Promise<HashedPassword> {
+export async function hashPasswordNew(
+  password: string,
+): Promise<HashedPassword> {
   const salt = genSalt();
   return { salt, hash: await hashPassword(password, salt) };
 }
@@ -59,4 +64,3 @@ export async function createSessionToken(userId: string): Promise<string> {
 export function generateResetCode(): string {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
-
