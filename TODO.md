@@ -25,7 +25,7 @@ Stop instant package activation on "اشترك الآن". Always open a Premium 
 - [x] 4. TypeScript check (`npx tsc --noEmit`) — zero errors
 - [x] 5. Production build (`npm run build`) — succeeds
 - [x] 6. Test all routes (HTTP 200, no "Hello", no blank pages)
-- [ ] 7. Commit changes
-- [ ] 8. Push to `origin/main`
-- [ ] 9. Verify live Vercel deployment
+- [x] 7. Commit changes
+- [x] 8. Push to `origin/main`
+- [x] 9. Verify live Vercel deployment
 
