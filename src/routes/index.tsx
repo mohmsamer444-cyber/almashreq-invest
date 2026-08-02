@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, ArrowLeftRight, Crown, ShieldCheck, Sparkles, Wallet } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowLeftRight, Crown, Sparkles, Users, Wallet, TrendingUp, Banknote } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { useSettings } from "@/components/layout/theme";
 import { AppShell, PageHeader } from "@/components/layout/app-shell";
@@ -7,15 +7,16 @@ import { StatCard } from "@/components/shared/stat-card";
 import { PortfolioChart, AllocationChart } from "@/components/shared/charts";
 import { TestimonialCarousel } from "@/components/shared/testimonial-carousel";
 import { NewsTicker } from "@/components/shared/news-ticker";
-import { PACKAGES, PORTFOLIO_TREND, ALLOCATION } from "@/lib/constants";
+import { HeroBanner } from "@/components/shared/hero-banner";
+import { PACKAGES, PORTFOLIO_TREND, ALLOCATION, PLATFORM_STATS } from "@/lib/constants";
 import { Button } from "@/components/ui";
 import { fmtMoney, fmtDateTime } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "الرئيسية | منصة المشرق" },
-      { name: "description", content: "منصة المشرق — لوحة تحكم استثمارية فاخرة." },
+      { title: "الرئيسية | حساب المشرق" },
+      { name: "description", content: "حساب المشرق — لوحة تحكم استثمارية فاخرة." },
     ],
   }),
   component: HomePage,
@@ -42,6 +43,9 @@ function HomePage() {
 
   return (
     <AppShell>
+      {/* Hero banner image */}
+      <HeroBanner className="mb-6 animate-reveal" />
+
       {/* Welcome hero */}
       <div className="animate-reveal relative overflow-hidden rounded-[2rem] glass p-6 sm:p-10">
         <div className="pointer-events-none absolute -end-10 -top-10 h-48 w-48 rounded-full bg-gold/10 blur-3xl" />
@@ -53,19 +57,23 @@ function HomePage() {
             </p>
             <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-ivory sm:text-5xl">
               {lang === "ar" ? "أهلاً بك في" : "Welcome to"}{" "}
-              <span className="text-gold-gradient">منصة المشرق</span>
+              <span className="text-gold-gradient">حساب المشرق</span>
             </h1>
             <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground sm:text-base">
-              {activePackage
-                ? lang === "ar"
-                  ? `باقتك النشطة: ${activePackage.name} بعائد يومي ${activePackage.daily}٪. استثمر أكثر وحقق المزيد.`
-                  : `Active package: ${activePackage.name} with ${activePackage.daily}% daily return.`
-                : lang === "ar"
-                  ? "ابدأ رحلة استثمارك اليوم واختر الباقة المناسبة لك من بين ٧ باقات متنوعة."
-                  : "Start your investment journey today."}
+              {lang === "ar"
+                ? "إدارة استثماراتك وأرباحك بكل سهولة وأمان."
+                : "Manage your investments and profits with ease and security."}
             </p>
+            {activePackage && (
+              <span className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/10 px-3.5 py-1.5 text-[11px] font-semibold text-success">
+                <Sparkles className="h-3.5 w-3.5" />
+                {lang === "ar"
+                  ? `باقتك النشطة: ${activePackage.name} — عائد يومي ${activePackage.daily}٪`
+                  : `Active package: ${activePackage.name} — ${activePackage.daily}% daily`}
+              </span>
+            )}
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link to="/invest">
+              <Link to="/investment">
                 <Button size="lg">
                   <Sparkles className="h-4 w-4" />
                   {lang === "ar" ? "اكتشف الباقات" : "Explore packages"}
@@ -103,12 +111,12 @@ function HomePage() {
         </div>
       </div>
 
-      {/* Stats */}
+      {/* Platform Stats (animated counters) */}
       <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        <StatCard label={lang === "ar" ? "الرصيد المتاح" : "Available balance"} value={user.balance} suffix="ج.م" icon={<Wallet className="h-5 w-5" />} accent="gold" />
-        <StatCard label={lang === "ar" ? "إجمالي الاستثمار" : "Total invested"} value={user.invested} suffix="ج.م" icon={<TrendingUpIcon />} accent="emerald" />
-        <StatCard label={lang === "ar" ? "الأرباح المتراكمة" : "Accumulated profit"} value={user.totalProfit} suffix="ج.م" icon={<Crown className="h-5 w-5" />} accent="violet" />
-        <StatCard label={lang === "ar" ? "أيام الاستثمار" : "Investment days"} value={user.investmentStartedAt ? Math.max(1, Math.floor((Date.now() - new Date(user.investmentStartedAt).getTime()) / 86400000)) : 0} icon={<ShieldCheck className="h-5 w-5" />} accent="blue" />
+        <StatCard label={lang === "ar" ? "المستثمرون النشطون" : "Active investors"} value={PLATFORM_STATS.activeInvestors} icon={<Users className="h-5 w-5" />} accent="gold" />
+        <StatCard label={lang === "ar" ? "إجمالي الاستثمارات" : "Total investments"} value={PLATFORM_STATS.totalInvestments} suffix="ج.م" icon={<TrendingUp className="h-5 w-5" />} accent="emerald" />
+        <StatCard label={lang === "ar" ? "سحوبات ناجحة" : "Successful withdrawals"} value={PLATFORM_STATS.successfulWithdrawals} icon={<Banknote className="h-5 w-5" />} accent="blue" />
+        <StatCard label={lang === "ar" ? "أرباح يومية" : "Daily profit"} value={PLATFORM_STATS.dailyProfit} suffix="ج.م" icon={<Crown className="h-5 w-5" />} accent="violet" />
       </div>
 
       {/* Charts */}
@@ -204,12 +212,4 @@ function HomePage() {
   );
 }
 
-function TrendingUpIcon() {
-  return (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M23 6l-9.5 9.5-5-5L1 18" />
-      <path d="M17 6h6v6" />
-    </svg>
-  );
-}
 

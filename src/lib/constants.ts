@@ -117,14 +117,33 @@ export const PACKAGES: InvestmentPackage[] = [
   },
 ];
 
-export const PAYMENT_METHODS = [
-  { id: "vodafone", labelAr: "فودافون كاش", labelEn: "Vodafone Cash", icon: "📱", hint: "01xxxxxxxxx", color: "#e60000" },
-  { id: "orange", labelAr: "أورانج كاش", labelEn: "Orange Cash", icon: "🟠", hint: "012xxxxxxxx", color: "#ff7900" },
-  { id: "etisalat", labelAr: "اتصالات كاش", labelEn: "Etisalat Cash", icon: "📲", hint: "011xxxxxxxx", color: "#5b2c6f" },
-  { id: "we", labelAr: "WE Pay", labelEn: "WE Pay", icon: "💳", hint: "015xxxxxxxx", color: "#f58533" },
-  { id: "instapay", labelAr: "إنستا باي", labelEn: "InstaPay", icon: "✨", hint: "رقم المحفظة أو البطاقة", color: "#6c3483" },
-  { id: "bank", labelAr: "تحويل بنكي", labelEn: "Bank Transfer", icon: "🏦", hint: "IBAN أو رقم الحساب", color: "#1f618d" },
+export interface PaymentMethod {
+  id: string;
+  labelAr: string;
+  labelEn: string;
+  icon: string;
+  hint: string;
+  color: string;
+  accountNumber: string;
+  accountName: string;
+}
+
+export const PAYMENT_METHODS: PaymentMethod[] = [
+  { id: "vodafone", labelAr: "فودافون كاش", labelEn: "Vodafone Cash", icon: "📱", hint: "01xxxxxxxxx", color: "#e60000", accountNumber: "01001234567", accountName: "أحمد محمود — المشرق" },
+  { id: "orange", labelAr: "أورانج كاش", labelEn: "Orange Cash", icon: "🟠", hint: "012xxxxxxxx", color: "#ff7900", accountNumber: "01223456789", accountName: "المشرق للاستثمار" },
+  { id: "etisalat", labelAr: "اتصالات كاش", labelEn: "Etisalat Cash", icon: "📲", hint: "011xxxxxxxx", color: "#5b2c6f", accountNumber: "01112345678", accountName: "المشرق للاستثمار" },
+  { id: "we", labelAr: "WE Pay", labelEn: "WE Pay", icon: "💳", hint: "015xxxxxxxx", color: "#f58533", accountNumber: "01534567890", accountName: "المشرق للاستثمار" },
+  { id: "instapay", labelAr: "إنستا باي", labelEn: "InstaPay", icon: "✨", hint: "رقم المحفظة أو البطاقة", color: "#6c3483", accountNumber: "110123456", accountName: "almashreq@instapay" },
+  { id: "bank", labelAr: "تحويل بنكي", labelEn: "Bank Transfer", icon: "🏦", hint: "IBAN أو رقم الحساب", color: "#1f618d", accountNumber: "EG760001004244558899001", accountName: "شركة المشرق للاستثمار" },
 ];
+
+// Platform-wide statistics (animated counters on home)
+export const PLATFORM_STATS = {
+  activeInvestors: 12500,
+  totalInvestments: 482000000,
+  successfulWithdrawals: 98600,
+  dailyProfit: 1420000,
+};
 
 export const TESTIMONIALS: Testimonial[] = [
   { id: "t1", name: "أحمد محمود", location: "القاهرة", content: "تجربة فاخرة وشفافة، تأكد إيداعي خلال ساعات والدعم كان في قمة الاحترافية. أنصح بها بشدة.", rating: 5, initials: "أم", color: "linear-gradient(135deg,#d4af37,#a67c00)" },

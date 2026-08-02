@@ -26,6 +26,11 @@ dist-ssr
 # Build cache
 .cache
 
+# Build / diagnostic logs
+build-output*.txt
+tsc-output*.txt
+dev-server*.log
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

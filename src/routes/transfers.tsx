@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { ArrowDownLeft, ArrowUpRight, Download, FileText, Image as ImageIcon, UploadCloud, X } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, Copy, Check, FileText, Image as ImageIcon, UploadCloud } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { useSettings } from "@/components/layout/theme";
 import { AppShell, PageHeader } from "@/components/layout/app-shell";
@@ -252,6 +252,9 @@ function DepositForm({ onDone }: { onDone: () => void }) {
           ))}
         </div>
         <p className="mt-2 text-[11px] text-muted-foreground">{method.hint}</p>
+
+        {/* Account details to transfer to */}
+        <PaymentAccountCard methodId={methodId} lang={lang} />
       </div>
 
       <div className="mt-5 space-y-4">
@@ -337,6 +340,76 @@ function DepositForm({ onDone }: { onDone: () => void }) {
         {busy ? <span className="skeleton h-4 w-20 rounded-full" /> : lang === "ar" ? "إرسال طلب الإيداع" : "Submit deposit"}
       </Button>
     </form>
+  );
+}
+
+function PaymentAccountCard({ methodId, lang }: { methodId: string; lang: "ar" | "en" }) {
+  const [copied, setCopied] = useState<"number" | "name" | null>(null);
+  const method = PAYMENT_METHODS.find((m) => m.id === methodId)!;
+
+  const copy = async (text: string, which: "number" | "name") => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // Fallback for older browsers / non-secure contexts
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    }
+    setCopied(which);
+    toast.success(lang === "ar" ? "تم نسخ البيانات" : "Copied to clipboard");
+    setTimeout(() => setCopied(null), 2000);
+  };
+
+  return (
+    <div className="mt-4 overflow-hidden rounded-2xl border border-gold/25 bg-gradient-to-b from-gold/10 to-transparent">
+      <div className="flex items-center gap-3 border-b border-gold/15 px-4 py-3">
+        <span className="grid h-10 w-10 place-items-center rounded-xl bg-background/50 text-lg">{method.icon}</span>
+        <div className="min-w-0">
+          <p className="text-xs font-semibold text-gold">{lang === "ar" ? method.labelAr : method.labelEn}</p>
+          <p className="text-[10px] text-muted-foreground">
+            {lang === "ar" ? "تحوّل إلى هذا الحساب" : "Transfer to this account"}
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-2 px-4 py-3">
+        {/* Account number */}
+        <div className="flex items-center justify-between gap-2 rounded-xl bg-background/50 px-3 py-2.5">
+          <div className="min-w-0">
+            <p className="text-[10px] text-muted-foreground">{lang === "ar" ? "رقم الحساب" : "Account number"}</p>
+            <p className="truncate font-mono text-sm font-semibold text-ivory" dir="ltr">{method.accountNumber}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => copy(method.accountNumber, "number")}
+            className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-gold/30 text-gold transition-colors hover:bg-gold/10"
+            aria-label="copy account number"
+          >
+            {copied === "number" ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+          </button>
+        </div>
+
+        {/* Account holder name */}
+        <div className="flex items-center justify-between gap-2 rounded-xl bg-background/50 px-3 py-2.5">
+          <div className="min-w-0">
+            <p className="text-[10px] text-muted-foreground">{lang === "ar" ? "اسم المستفيد" : "Account holder"}</p>
+            <p className="truncate text-sm font-semibold text-ivory">{method.accountName}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => copy(method.accountName, "name")}
+            className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-gold/30 text-gold transition-colors hover:bg-gold/10"
+            aria-label="copy account holder name"
+          >
+            {copied === "name" ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 

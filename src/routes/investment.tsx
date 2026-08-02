@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PackagesPage } from "@/components/packages-page";
 
-export const Route = createFileRoute("/invest")({
+export const Route = createFileRoute("/investment")({
   head: () => ({
     meta: [
       { title: "باقات الاستثمار | حساب المشرق" },
@@ -10,3 +10,4 @@ export const Route = createFileRoute("/invest")({
   }),
   component: PackagesPage,
 });
+
