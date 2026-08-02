@@ -19,8 +19,8 @@
 - [x] `npx tsc --noEmit` — zero errors
 - [x] `npm run build` — succeeds, no errors
 - [x] Dev server: every route HTTP 200, no "Hello", no blank pages, no console errors
-- [ ] Commit all changes
-- [ ] Push to `origin/main`
+- [x] Commit all changes
+- [x] Push to `origin/main`
 - [ ] Vercel deployment Ready
 - [ ] Live site verified
 
