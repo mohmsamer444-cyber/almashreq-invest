@@ -44,5 +44,6 @@
 
 ## Verification
 - [x] `npx tsc --noEmit` — zero type errors
-- [ ] `npm run build` — final production build check
+- [x] `npm run build` — production build passes (BUILD_EXIT=0)
+- [x] Live production deployment — HTTP 200 on `https://almashreq-invest-sigma.vercel.app`
 
