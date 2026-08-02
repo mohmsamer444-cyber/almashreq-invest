@@ -18,7 +18,7 @@ import { useStore } from "@/lib/store";
 import { useSettings } from "@/components/layout/theme";
 import { AppShell, PageHeader } from "@/components/layout/app-shell";
 import { PACKAGES, PAYMENT_METHODS } from "@/lib/constants";
-import { Button } from "@/components/ui";
+import { Button, Modal } from "@/components/ui";
 import { cn, fmtMoney } from "@/lib/utils";
 import type { InvestmentPackage } from "@/lib/types";
 
@@ -395,80 +395,68 @@ function ConfirmDialog({
   const after = balance - pkg.amount;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm animate-modal-backdrop"
-      onClick={onClose}
-    >
-      <div
-        className="w-full max-w-md overflow-hidden rounded-3xl border border-gold/20 bg-[#141414] shadow-2xl animate-scale-in"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="p-6">
-          <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gold/10 text-gold animate-glow-pulse">
-            <Wallet className="h-7 w-7" />
-          </div>
-          <h3 className="mt-4 text-center font-display text-xl font-bold text-ivory">
-            {lang === "ar" ? "تأكيد الاشتراك" : "Confirm subscription"}
-          </h3>
-          <p className="mt-1 text-center text-sm text-gold">
-            {lang === "ar" ? `باقة ${name}` : `${name} package`}
-          </p>
-          <p className="mt-2 text-center text-sm text-muted-foreground">
-            {lang === "ar"
-              ? `سيتم خصم ${fmtMoney(pkg.amount, "en")} ج.م من رصيدك لتفعيل الباقة.`
-              : `${fmtMoney(pkg.amount, "en")} EGP will be deducted from your balance to activate the package.`}
-          </p>
+    <Modal onClose={onClose} size="sm">
+      <div className="max-h-[92dvh] overflow-y-auto p-6">
+        <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gold/10 text-gold animate-glow-pulse">
+          <Wallet className="h-7 w-7" />
+        </div>
+        <h3 className="mt-4 text-center font-display text-xl font-bold text-ivory">
+          {lang === "ar" ? "تأكيد الاشتراك" : "Confirm subscription"}
+        </h3>
+        <p className="mt-1 text-center text-sm text-gold">
+          {lang === "ar" ? `باقة ${name}` : `${name} package`}
+        </p>
+        <p className="mt-2 text-center text-sm text-muted-foreground">
+          {lang === "ar"
+            ? `سيتم خصم ${fmtMoney(pkg.amount, "en")} ج.م من رصيدك لتفعيل الباقة.`
+            : `${fmtMoney(pkg.amount, "en")} EGP will be deducted from your balance to activate the package.`}
+        </p>
 
-          {/* Summary */}
-          <div className="mt-5 space-y-2 rounded-2xl border border-border/50 bg-background/40 p-4">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">
-                {lang === "ar" ? "قيمة الباقة" : "Package price"}
-              </span>
-              <span className="font-semibold text-gold" dir="ltr">
-                {fmtMoney(pkg.amount, "en")} ج.م
-              </span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">
-                {lang === "ar" ? "رصيدك الحالي" : "Your balance"}
-              </span>
-              <span className="font-semibold text-ivory" dir="ltr">
-                {fmtMoney(balance, "en")} ج.م
-              </span>
-            </div>
-            <div className="flex justify-between border-t border-border/40 pt-2 text-sm">
-              <span className="text-muted-foreground">
-                {lang === "ar" ? "الرصيد بعد الخصم" : "Balance after"}
-              </span>
-              <span
-                className={cn(
-                  "font-semibold",
-                  after >= 0 ? "text-success" : "text-destructive",
-                )}
-                dir="ltr"
-              >
-                {fmtMoney(after, "en")} ج.م
-              </span>
-            </div>
+        {/* Summary */}
+        <div className="mt-5 space-y-2 rounded-2xl border border-border/50 bg-background/40 p-4">
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">
+              {lang === "ar" ? "قيمة الباقة" : "Package price"}
+            </span>
+            <span className="font-semibold text-gold" dir="ltr">
+              {fmtMoney(pkg.amount, "en")} ج.م
+            </span>
           </div>
-
-          <div className="mt-6 grid grid-cols-2 gap-3">
-            <Button variant="outline" onClick={onClose}>
-              {lang === "ar" ? "إلغاء" : "Cancel"}
-            </Button>
-            <Button
-              variant="gold"
-              onClick={onConfirm}
-              className="gold-btn shine"
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">
+              {lang === "ar" ? "رصيدك الحالي" : "Your balance"}
+            </span>
+            <span className="font-semibold text-ivory" dir="ltr">
+              {fmtMoney(balance, "en")} ج.م
+            </span>
+          </div>
+          <div className="flex justify-between border-t border-border/40 pt-2 text-sm">
+            <span className="text-muted-foreground">
+              {lang === "ar" ? "الرصيد بعد الخصم" : "Balance after"}
+            </span>
+            <span
+              className={cn(
+                "font-semibold",
+                after >= 0 ? "text-success" : "text-destructive",
+              )}
+              dir="ltr"
             >
-              <Check className="h-4 w-4" />
-              {lang === "ar" ? "تأكيد الاشتراك" : "Confirm"}
-            </Button>
+              {fmtMoney(after, "en")} ج.م
+            </span>
           </div>
         </div>
+
+        <div className="mt-6 grid grid-cols-2 gap-3">
+          <Button variant="outline" onClick={onClose}>
+            {lang === "ar" ? "إلغاء" : "Cancel"}
+          </Button>
+          <Button variant="gold" onClick={onConfirm} className="gold-btn shine">
+            <Check className="h-4 w-4" />
+            {lang === "ar" ? "تأكيد الاشتراك" : "Confirm"}
+          </Button>
+        </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 
@@ -593,307 +581,295 @@ function DepositModal({ pkg, lang, onClose, onSubmit }: DepositModalProps) {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm animate-modal-backdrop"
-      onClick={onClose}
-    >
-      <div
-        className="w-full max-w-lg overflow-hidden rounded-3xl border border-gold/20 bg-[#141414] shadow-2xl animate-scale-in"
-        onClick={(e) => e.stopPropagation()}
+    <Modal onClose={onClose} size="md">
+      {/* Header */}
+      <div className="flex shrink-0 items-center justify-between border-b border-white/10 p-4 sm:p-5">
+        <div className="min-w-0">
+          <p className="truncate text-[10px] font-semibold uppercase tracking-[0.25em] text-gold">
+            {lang === "ar" ? "طلب إيداع — إيداع بريميوم" : "Deposit Request — Premium"}
+          </p>
+          <h3 className="mt-1 truncate font-display text-base font-bold text-ivory sm:text-lg">
+            {lang === "ar" ? `باقة ${name}` : `${name} Package`}
+          </h3>
+        </div>
+        <button
+          onClick={onClose}
+          className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-white/10 text-muted-foreground transition-colors hover:text-ivory"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+
+      <form
+        onSubmit={handleSubmit}
+        className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain p-4 sm:p-5"
       >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 p-5">
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-gold">
-              {lang === "ar"
-                ? "طلب إيداع — إيداع بريميوم"
-                : "Deposit Request — Premium"}
-            </p>
-            <h3 className="mt-1 font-display text-lg font-bold text-ivory">
-              {lang === "ar" ? `باقة ${name}` : `${name} Package`}
-            </h3>
+        {/* 1 — Package name + price (read only) */}
+        <div className="rounded-2xl border border-gold/20 bg-gradient-to-b from-gold/10 to-transparent p-3.5 sm:p-4">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs text-muted-foreground">
+              {lang === "ar" ? "الباقة" : "Package"}
+            </span>
+            <span className="truncate text-sm font-bold text-ivory">{name}</span>
           </div>
-          <button
-            onClick={onClose}
-            className="grid h-8 w-8 place-items-center rounded-full border border-white/10 text-muted-foreground transition-colors hover:text-ivory"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          <div className="mt-2 flex items-center justify-between gap-2">
+            <span className="text-xs text-muted-foreground">
+              {lang === "ar" ? "سعر الباقة" : "Package price"}
+            </span>
+            <span
+              className="font-display text-base font-bold text-gold-gradient sm:text-lg"
+              dir="ltr"
+            >
+              {fmtMoney(pkg.amount, "en")}{" "}
+              <span className="text-xs">{lang === "ar" ? "ج.م" : "EGP"}</span>
+            </span>
+          </div>
+          <div className="mt-2 flex items-center justify-between gap-2">
+            <span className="text-xs text-muted-foreground">
+              {lang === "ar" ? "العائد اليومي" : "Daily return"}
+            </span>
+            <span className="text-sm font-bold text-success">
+              {pkg.dailyReturn}%
+            </span>
+          </div>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="max-h-[70vh] space-y-4 overflow-y-auto p-5"
-        >
-          {/* 1 — Package name + price (read only) */}
-          <div className="rounded-2xl border border-gold/20 bg-gradient-to-b from-gold/10 to-transparent p-4">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">
-                {lang === "ar" ? "الباقة" : "Package"}
-              </span>
-              <span className="text-sm font-bold text-ivory">{name}</span>
-            </div>
-            <div className="mt-2 flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">
-                {lang === "ar" ? "سعر الباقة" : "Package price"}
-              </span>
-              <span
-                className="font-display text-lg font-bold text-gold-gradient"
-                dir="ltr"
+        {/* 2 — Deposit Amount */}
+        <div>
+          <label className="mb-2 block text-xs font-medium text-muted-foreground">
+            {lang === "ar" ? "مبلغ الإيداع (ج.م)" : "Deposit amount (EGP)"}
+          </label>
+          <input
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder={
+              lang === "ar"
+                ? `الحد الأدنى ${fmtMoney(pkg.amount, "en")} ج.م`
+                : `Minimum ${fmtMoney(pkg.amount, "en")} EGP`
+            }
+            inputMode="numeric"
+            dir="ltr"
+            className="w-full rounded-2xl border border-border/70 bg-background/40 px-4 py-3 text-sm text-ivory outline-none transition-all focus:border-gold/60 focus:shadow-[0_0_0_4px_oklch(0.78_0.14_80/0.12)]"
+          />
+        </div>
+
+        {/* 3 — Payment Method Dropdown */}
+        <div>
+          <label className="mb-2 block text-xs font-medium text-muted-foreground">
+            {lang === "ar" ? "وسيلة الدفع" : "Payment method"}
+          </label>
+          <div className="relative">
+            <select
+              value={method}
+              onChange={(e) => setMethod(e.target.value)}
+              className="w-full appearance-none rounded-2xl border border-border/70 bg-background/40 px-4 py-3 text-sm text-ivory outline-none transition-all focus:border-gold/60 focus:shadow-[0_0_0_4px_oklch(0.78_0.14_80/0.12)]"
+            >
+              {PAYMENT_METHODS.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.icon} {lang === "ar" ? m.labelAr : m.labelEn}
+                </option>
+              ))}
+            </select>
+            <span className="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 text-gold">
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
               >
-                {fmtMoney(pkg.amount, "en")}{" "}
-                <span className="text-xs">{lang === "ar" ? "ج.م" : "EGP"}</span>
-              </span>
-            </div>
-            <div className="mt-2 flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">
-                {lang === "ar" ? "العائد اليومي" : "Daily return"}
-              </span>
-              <span className="text-sm font-bold text-success">
-                {pkg.dailyReturn}%
-              </span>
-            </div>
-          </div>
-
-          {/* 2 — Deposit Amount */}
-          <div>
-            <label className="mb-2 block text-xs font-medium text-muted-foreground">
-              {lang === "ar" ? "مبلغ الإيداع (ج.م)" : "Deposit amount (EGP)"}
-            </label>
-            <input
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder={
-                lang === "ar"
-                  ? `الحد الأدنى ${fmtMoney(pkg.amount, "en")} ج.م`
-                  : `Minimum ${fmtMoney(pkg.amount, "en")} EGP`
-              }
-              inputMode="numeric"
-              dir="ltr"
-              className="w-full rounded-2xl border border-border/70 bg-background/40 px-4 py-3 text-sm text-ivory outline-none transition-all focus:border-gold/60 focus:shadow-[0_0_0_4px_oklch(0.78_0.14_80/0.12)]"
-            />
-          </div>
-
-          {/* 3 — Payment Method Dropdown */}
-          <div>
-            <label className="mb-2 block text-xs font-medium text-muted-foreground">
-              {lang === "ar" ? "وسيلة الدفع" : "Payment method"}
-            </label>
-            <div className="relative">
-              <select
-                value={method}
-                onChange={(e) => setMethod(e.target.value)}
-                className="w-full appearance-none rounded-2xl border border-border/70 bg-background/40 px-4 py-3 text-sm text-ivory outline-none transition-all focus:border-gold/60 focus:shadow-[0_0_0_4px_oklch(0.78_0.14_80/0.12)]"
-              >
-                {PAYMENT_METHODS.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.icon} {lang === "ar" ? m.labelAr : m.labelEn}
-                  </option>
-                ))}
-              </select>
-              <span className="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 text-gold">
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-
-          {/* 4 — Payment account info with copy */}
-          <div className="rounded-2xl border border-gold/20 bg-gold/5 p-4">
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-gold">
-              {lang === "ar" ? "بيانات الحساب" : "Account details"}
-            </p>
-            <p className="mt-1 text-[11px] text-muted-foreground">
-              {lang === "ar"
-                ? `حوّل المبلغ إلى ${selectedMethod.labelAr} ثم ارفع الإيصال.`
-                : `Transfer to ${selectedMethod.labelEn} then upload the receipt.`}
-            </p>
-            <div className="mt-3 space-y-2">
-              {/* Account number */}
-              <div className="flex items-center justify-between gap-2 rounded-xl bg-background/50 px-3 py-2.5">
-                <div className="min-w-0">
-                  <p className="text-[10px] text-muted-foreground">
-                    {lang === "ar" ? "رقم الحساب" : "Account number"}
-                  </p>
-                  <p
-                    className="truncate font-mono text-sm font-semibold text-gold"
-                    dir="ltr"
-                  >
-                    {selectedMethod.accountNumber}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() =>
-                    copyToClipboard(selectedMethod.accountNumber, "number")
-                  }
-                  className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-gold/30 text-gold transition-colors hover:bg-gold/10"
-                  aria-label="copy account number"
-                >
-                  {copied === "number" ? (
-                    <Check className="h-3.5 w-3.5" />
-                  ) : (
-                    <Copy className="h-3.5 w-3.5" />
-                  )}
-                </button>
-              </div>
-              {/* Account holder */}
-              <div className="flex items-center justify-between gap-2 rounded-xl bg-background/50 px-3 py-2.5">
-                <div className="min-w-0">
-                  <p className="text-[10px] text-muted-foreground">
-                    {lang === "ar" ? "اسم المستفيد" : "Account holder"}
-                  </p>
-                  <p className="truncate text-sm font-semibold text-ivory">
-                    {selectedMethod.accountName}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() =>
-                    copyToClipboard(selectedMethod.accountName, "name")
-                  }
-                  className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-gold/30 text-gold transition-colors hover:bg-gold/10"
-                  aria-label="copy account holder name"
-                >
-                  {copied === "name" ? (
-                    <Check className="h-3.5 w-3.5" />
-                  ) : (
-                    <Copy className="h-3.5 w-3.5" />
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* 5 — Sender Number */}
-          <div>
-            <label className="mb-2 block text-xs font-medium text-muted-foreground">
-              {lang === "ar"
-                ? "رقم الهاتف أو الحساب الذي تم التحويل منه"
-                : "Sender phone or account number"}
-            </label>
-            <input
-              value={senderPhone}
-              onChange={(e) => setSenderPhone(e.target.value)}
-              placeholder={selectedMethod.hint}
-              inputMode="numeric"
-              dir="ltr"
-              className="w-full rounded-2xl border border-border/70 bg-background/40 px-4 py-3 text-sm text-ivory outline-none transition-all focus:border-gold/60 focus:shadow-[0_0_0_4px_oklch(0.78_0.14_80/0.12)]"
-            />
-          </div>
-
-          {/* 6 — Receipt upload with preview */}
-          <div>
-            <label className="mb-2 block text-xs font-medium text-muted-foreground">
-              {lang === "ar"
-                ? "إيصال التحويل (مطلوب)"
-                : "Transfer receipt (required)"}
-            </label>
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/*"
-              onChange={handleFile}
-              className="hidden"
-            />
-            {receiptData ? (
-              <div className="overflow-hidden rounded-2xl border border-success/30 bg-background/40">
-                <img
-                  src={receiptData}
-                  alt="receipt preview"
-                  className="max-h-52 w-full object-contain"
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19 9l-7 7-7-7"
                 />
-                <div className="flex items-center justify-between gap-2 border-t border-border/40 p-3">
-                  <p className="flex min-w-0 items-center gap-1.5 text-xs font-medium text-success">
-                    <Check className="h-3.5 w-3.5 shrink-0" />
-                    <span className="truncate">{receiptName}</span>
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => fileRef.current?.click()}
-                    className="shrink-0 rounded-lg border border-border/60 px-2.5 py-1.5 text-[11px] text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold"
-                  >
-                    {lang === "ar" ? "تغيير" : "Change"}
-                  </button>
-                </div>
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        {/* 4 — Payment account info with copy */}
+        <div className="rounded-2xl border border-gold/20 bg-gold/5 p-3.5 sm:p-4">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-gold">
+            {lang === "ar" ? "بيانات الحساب" : "Account details"}
+          </p>
+          <p className="mt-1 text-[11px] text-muted-foreground">
+            {lang === "ar"
+              ? `حوّل المبلغ إلى ${selectedMethod.labelAr} ثم ارفع الإيصال.`
+              : `Transfer to ${selectedMethod.labelEn} then upload the receipt.`}
+          </p>
+          <div className="mt-3 space-y-2">
+            {/* Account number */}
+            <div className="flex items-center justify-between gap-2 rounded-xl bg-background/50 px-3 py-2.5">
+              <div className="min-w-0">
+                <p className="text-[10px] text-muted-foreground">
+                  {lang === "ar" ? "رقم الحساب" : "Account number"}
+                </p>
+                <p
+                  className="truncate font-mono text-sm font-semibold text-gold"
+                  dir="ltr"
+                >
+                  {selectedMethod.accountNumber}
+                </p>
               </div>
-            ) : (
               <button
                 type="button"
-                onClick={() => fileRef.current?.click()}
-                className={cn(
-                  "flex w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed p-6 text-sm transition-all",
-                  "border-border/60 text-muted-foreground hover:border-gold/40 hover:bg-gold/5 hover:text-gold",
-                )}
+                onClick={() =>
+                  copyToClipboard(selectedMethod.accountNumber, "number")
+                }
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-gold/30 text-gold transition-colors hover:bg-gold/10"
+                aria-label="copy account number"
               >
-                <span className="grid h-11 w-11 place-items-center rounded-2xl bg-gold/10 text-gold">
-                  <ImageIcon className="h-5 w-5" />
-                </span>
-                <span>
-                  {lang === "ar"
-                    ? "اضغط لرفع صورة الإيصال"
-                    : "Click to upload receipt image"}
-                </span>
-                <span className="text-[10px] text-muted-foreground/60">
-                  {lang === "ar" ? "PNG · JPG" : "PNG · JPG"}
-                </span>
+                {copied === "number" ? (
+                  <Check className="h-3.5 w-3.5" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5" />
+                )}
               </button>
-            )}
-          </div>
-
-          {/* 7 — Optional Notes */}
-          <div>
-            <label className="mb-2 block text-xs font-medium text-muted-foreground">
-              {lang === "ar" ? "ملاحظات (اختياري)" : "Notes (optional)"}
-            </label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder={
-                lang === "ar" ? "أي ملاحظات إضافية…" : "Any additional notes…"
-              }
-              rows={2}
-              className="w-full resize-none rounded-2xl border border-border/70 bg-background/40 px-4 py-3 text-sm text-ivory outline-none transition-all focus:border-gold/60 focus:shadow-[0_0_0_4px_oklch(0.78_0.14_80/0.12)]"
-            />
-          </div>
-
-          {/* Error */}
-          {error && (
-            <div className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive animate-fade-up">
-              <AlertTriangle className="h-4 w-4 shrink-0" />
-              {error}
             </div>
-          )}
+            {/* Account holder */}
+            <div className="flex items-center justify-between gap-2 rounded-xl bg-background/50 px-3 py-2.5">
+              <div className="min-w-0">
+                <p className="text-[10px] text-muted-foreground">
+                  {lang === "ar" ? "اسم المستفيد" : "Account holder"}
+                </p>
+                <p className="truncate text-sm font-semibold text-ivory">
+                  {selectedMethod.accountName}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() =>
+                  copyToClipboard(selectedMethod.accountName, "name")
+                }
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-gold/30 text-gold transition-colors hover:bg-gold/10"
+                aria-label="copy account holder name"
+              >
+                {copied === "name" ? (
+                  <Check className="h-3.5 w-3.5" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5" />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
 
-          {/* Submit — Gold Button */}
-          <Button
-            type="submit"
-            fullWidth
-            size="lg"
-            className="gold-btn shine !rounded-2xl !py-4 text-base font-bold text-graphite"
-          >
-            <Send className="h-4 w-4" />
-            {lang === "ar" ? "إرسال طلب الإيداع" : "Submit Deposit Request"}
-          </Button>
-
-          <p className="pb-2 text-center text-[10px] text-muted-foreground/60">
+        {/* 5 — Sender Number */}
+        <div>
+          <label className="mb-2 block text-xs font-medium text-muted-foreground">
             {lang === "ar"
-              ? "لن يتم تفعيل الباقة أو إضافة الرصيد إلا بعد اعتماد الإدارة للتحويل."
-              : "The package will not be activated or balance added until admin approves the transfer."}
-          </p>
-        </form>
-      </div>
-    </div>
+              ? "رقم الهاتف أو الحساب الذي تم التحويل منه"
+              : "Sender phone or account number"}
+          </label>
+          <input
+            value={senderPhone}
+            onChange={(e) => setSenderPhone(e.target.value)}
+            placeholder={selectedMethod.hint}
+            inputMode="numeric"
+            dir="ltr"
+            className="w-full rounded-2xl border border-border/70 bg-background/40 px-4 py-3 text-sm text-ivory outline-none transition-all focus:border-gold/60 focus:shadow-[0_0_0_4px_oklch(0.78_0.14_80/0.12)]"
+          />
+        </div>
+
+        {/* 6 — Receipt upload with preview */}
+        <div>
+          <label className="mb-2 block text-xs font-medium text-muted-foreground">
+            {lang === "ar" ? "إيصال التحويل (مطلوب)" : "Transfer receipt (required)"}
+          </label>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFile}
+            className="hidden"
+          />
+          {receiptData ? (
+            <div className="overflow-hidden rounded-2xl border border-success/30 bg-background/40">
+              <img
+                src={receiptData}
+                alt="receipt preview"
+                className="max-h-44 w-full object-contain sm:max-h-52"
+              />
+              <div className="flex items-center justify-between gap-2 border-t border-border/40 p-3">
+                <p className="flex min-w-0 items-center gap-1.5 text-xs font-medium text-success">
+                  <Check className="h-3.5 w-3.5 shrink-0" />
+                  <span className="truncate">{receiptName}</span>
+                </p>
+                <button
+                  type="button"
+                  onClick={() => fileRef.current?.click()}
+                  className="shrink-0 rounded-lg border border-border/60 px-2.5 py-1.5 text-[11px] text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold"
+                >
+                  {lang === "ar" ? "تغيير" : "Change"}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              className={cn(
+                "flex w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed p-5 text-sm transition-all",
+                "border-border/60 text-muted-foreground hover:border-gold/40 hover:bg-gold/5 hover:text-gold",
+              )}
+            >
+              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-gold/10 text-gold">
+                <ImageIcon className="h-5 w-5" />
+              </span>
+              <span>
+                {lang === "ar"
+                  ? "اضغط لرفع صورة الإيصال"
+                  : "Click to upload receipt image"}
+              </span>
+              <span className="text-[10px] text-muted-foreground/60">
+                {lang === "ar" ? "PNG · JPG" : "PNG · JPG"}
+              </span>
+            </button>
+          )}
+        </div>
+
+        {/* 7 — Optional Notes */}
+        <div>
+          <label className="mb-2 block text-xs font-medium text-muted-foreground">
+            {lang === "ar" ? "ملاحظات (اختياري)" : "Notes (optional)"}
+          </label>
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder={
+              lang === "ar" ? "أي ملاحظات إضافية…" : "Any additional notes…"
+            }
+            rows={2}
+            className="w-full resize-none rounded-2xl border border-border/70 bg-background/40 px-4 py-3 text-sm text-ivory outline-none transition-all focus:border-gold/60 focus:shadow-[0_0_0_4px_oklch(0.78_0.14_80/0.12)]"
+          />
+        </div>
+
+        {/* Error */}
+        {error && (
+          <div className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive animate-fade-up">
+            <AlertTriangle className="h-4 w-4 shrink-0" />
+            {error}
+          </div>
+        )}
+
+        {/* Submit — Gold Button */}
+        <Button
+          type="submit"
+          fullWidth
+          size="lg"
+          className="gold-btn shine !rounded-2xl !py-4 text-base font-bold text-graphite"
+        >
+          <Send className="h-4 w-4" />
+          {lang === "ar" ? "إرسال طلب الإيداع" : "Submit Deposit Request"}
+        </Button>
+
+        <p className="pb-1 text-center text-[10px] text-muted-foreground/60">
+          {lang === "ar"
+            ? "لن يتم تفعيل الباقة أو إضافة الرصيد إلا بعد اعتماد الإدارة للتحويل."
+            : "The package will not be activated or balance added until admin approves the transfer."}
+        </p>
+      </form>
+    </Modal>
   );
 }

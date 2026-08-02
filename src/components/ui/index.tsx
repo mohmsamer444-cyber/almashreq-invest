@@ -1,11 +1,62 @@
 import {
   forwardRef,
+  useEffect,
   type ButtonHTMLAttributes,
   type InputHTMLAttributes,
   type TextareaHTMLAttributes,
   type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
+
+/* ---------- Modal (portal) ---------- */
+export function Modal({
+  onClose,
+  className,
+  children,
+  size = "md",
+}: {
+  onClose: () => void;
+  className?: string;
+  children: ReactNode;
+  size?: "sm" | "md" | "lg";
+}) {
+  // Lock body scroll while open + prevent horizontal shift
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    const prevPadEnd = document.body.style.paddingInlineEnd;
+    const scrollbar = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = "hidden";
+    if (scrollbar > 0) document.body.style.paddingInlineEnd = `${scrollbar}px`;
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.body.style.paddingInlineEnd = prevPadEnd;
+    };
+  }, []);
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-3 backdrop-blur-sm animate-modal-backdrop sm:p-4"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        className={cn(
+          "flex max-h-[92dvh] w-full flex-col overflow-hidden rounded-3xl border border-gold/20 bg-[#141414] shadow-2xl animate-scale-in",
+          size === "sm" && "max-w-md",
+          size === "md" && "max-w-lg",
+          size === "lg" && "max-w-2xl",
+          className,
+        )}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {children}
+      </div>
+    </div>,
+    document.body,
+  );
+}
 
 /* ---------- Button ---------- */
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

@@ -227,6 +227,9 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    max-width: 100%;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
@@ -235,6 +238,10 @@
     font-family: var(--font-sans);
     font-weight: 400;
     line-height: 1.6;
+    overflow-x: hidden;
+    max-width: 100%;
+    min-height: 100dvh;
+    overscroll-behavior-y: none;
     background-image:
       radial-gradient(
         900px 500px at 85% -10%,
@@ -247,6 +254,48 @@
         transparent 65%
       );
     background-attachment: fixed;
+  }
+
+  /* Prevent any horizontal scroll from breaking layout */
+  #root,
+  main,
+  .animate-page-enter {
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    max-width: 100%;
+    height: auto;
+  }
+
+  table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+  }
+
+  /* Large touch targets on mobile */
+  @media (max-width: 640px) {
+    button,
+    [role="button"],
+    input,
+    select,
+    textarea {
+      touch-action: manipulation;
+    }
   }
 
   .light body {

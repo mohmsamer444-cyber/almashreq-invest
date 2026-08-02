@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { CountUp } from "./count-up";
+import { LiveCounter } from "./live-counter";
 
 export function StatCard({
   label,
@@ -9,6 +10,7 @@ export function StatCard({
   icon,
   accent = "gold",
   count = true,
+  live = false,
   sub,
 }: {
   label: string;
@@ -17,6 +19,7 @@ export function StatCard({
   icon: ReactNode;
   accent?: "gold" | "emerald" | "violet" | "blue";
   count?: boolean;
+  live?: boolean;
   sub?: string;
 }) {
   const accents: Record<string, string> = {
@@ -26,31 +29,41 @@ export function StatCard({
     blue: "bg-[#3498db]/12 text-[#7fb3d8]",
   };
 
+  const numCls =
+    "min-w-0 truncate font-display text-[clamp(0.95rem,4vw,1.875rem)] font-bold leading-tight text-ivory tabular-nums [direction:ltr]";
+
   return (
-    <div className="lift group rounded-3xl glass p-5 sm:p-6">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-xs text-muted-foreground">{label}</p>
-          <div className="mt-2 flex items-baseline gap-1.5">
+    <div className="lift group relative min-w-0 overflow-hidden rounded-3xl glass p-4 sm:p-6">
+      <div className="flex items-start justify-between gap-2 sm:gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-[11px] text-muted-foreground sm:text-xs">
+            {label}
+          </p>
+          <div className="mt-2 flex min-w-0 items-baseline gap-1">
             {count ? (
-              <CountUp
-                to={Number(value)}
-                className="font-display text-2xl font-bold text-ivory sm:text-3xl"
-              />
+              live ? (
+                <LiveCounter base={Number(value)} className={numCls} />
+              ) : (
+                <CountUp to={Number(value)} className={numCls} />
+              )
             ) : (
-              <span className="font-display text-2xl font-bold text-ivory sm:text-3xl">
-                {value}
+              <span className={numCls}>{value}</span>
+            )}
+            {suffix && (
+              <span className="shrink-0 text-[10px] text-gold sm:text-xs">
+                {suffix}
               </span>
             )}
-            {suffix && <span className="text-xs text-gold">{suffix}</span>}
           </div>
           {sub && (
-            <p className="mt-1.5 text-[11px] text-muted-foreground">{sub}</p>
+            <p className="mt-1.5 truncate text-[11px] text-muted-foreground">
+              {sub}
+            </p>
           )}
         </div>
         <span
           className={cn(
-            "grid h-11 w-11 shrink-0 place-items-center rounded-2xl transition-transform duration-500 group-hover:scale-110",
+            "grid h-10 w-10 shrink-0 place-items-center rounded-2xl transition-transform duration-500 group-hover:scale-110 sm:h-11 sm:w-11",
             accents[accent],
           )}
         >
@@ -60,3 +73,4 @@ export function StatCard({
     </div>
   );
 }
+

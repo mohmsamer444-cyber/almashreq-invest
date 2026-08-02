@@ -41,3 +41,5 @@ dev-server*.log
 *.njsproj
 *.sln
 *.sw?
+
+.vercel

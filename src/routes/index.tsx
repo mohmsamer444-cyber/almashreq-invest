@@ -147,6 +147,7 @@ function HomePage() {
           value={PLATFORM_STATS.activeInvestors}
           icon={<Users className="h-5 w-5" />}
           accent="gold"
+          live
         />
         <StatCard
           label={lang === "ar" ? "إجمالي الاستثمارات" : "Total investments"}

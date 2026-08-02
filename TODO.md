@@ -1,31 +1,48 @@
-# Deposit Workflow — Task Checklist
+# Al-Mashreq Platform — Deposit Approval Flow + UI Polish
 
-## Goal
-Stop instant package activation on "اشترك الآن". Always open a Premium Deposit Modal → create Pending Deposit Request → Admin approves (adds balance + notification) → User then subscribes using wallet balance.
+## Core: Stop Instant Activation (DONE)
+- [x] REMOVED the old instant activation on "اشترك الآن" (no more "تم تفعيل الباقة" upon click)
+- [x] Clicking "اشترك الآن" now:
+  - If wallet balance **≥** package price → opens confirmation dialog → deduct + activate + show "تم الاشتراك في الباقة بنجاح"
+  - If balance **<** price → opens the **Premium Deposit Modal** (no activation)
 
-## Steps
-- [x] 1. Rewrite `src/routes/admin.deposits.tsx` — complete Admin Deposit Requests page:
-  - Admin-only guard
-  - Stat cards (pending / approved / rejected / total approved)
-  - Search + status filter
-  - Request list with receipt preview
-  - Approve / Reject actions
-- [x] 2. UI polish in `src/styles.css`:
-  - Faster page transitions
-  - Smoother modal animations
-  - Card stagger entrance utility
-  - Better button hover effects
-  - No layout jumping / stable cards
-  - Preserve premium dark + gold design
-- [x] 3. UI polish in `src/components/packages-page.tsx`:
-  - Staggered card entrance animations
-  - Smooth modal improvements
-  - Verify "اشترك الآن" ALWAYS opens Deposit Modal (never instant activation)
-  - Verify subscribe flow only activates when wallet balance >= price (with confirmation dialog)
-- [x] 4. TypeScript check (`npx tsc --noEmit`) — zero errors
-- [x] 5. Production build (`npm run build`) — succeeds
-- [x] 6. Test all routes (HTTP 200, no "Hello", no blank pages)
-- [x] 7. Commit changes
-- [x] 8. Push to `origin/main`
-- [x] 9. Verify live Vercel deployment
+## Premium Deposit Modal (DONE)
+- [x] Selected package name
+- [x] Package price (read-only)
+- [x] Deposit amount (numeric input)
+- [x] Payment method dropdown: Vodafone Cash, Orange Cash, Etisalat Cash, WE Pay, InstaPay, Bank Transfer
+- [x] Payment info shown after selecting method: account number + holder name + copy button
+- [x] Sender phone/account number input
+- [x] Receipt image upload with live preview
+- [x] Optional notes
+- [x] Gold submit button: "إرسال طلب الإيداع"
+- [x] Validation: method, amount, sender number, receipt — inline error messages
+- [x] On submit: creates a **Pending** deposit request ONLY — no activation, no balance credit, no investment start, no "تم تفعيل الباقة"; shows "✅ تم إرسال طلب الإيداع بنجاح … قيد مراجعة الإدارة."
+
+## Admin — Deposit Requests Page (DONE)
+- [x] `/admin/deposits` fully built (view/search/filter/status)
+- [x] View receipt (image preview + reference copy)
+- [x] Approve / Reject pending requests
+- [x] **On approve**: credits user wallet + transaction log + notification "✅ تم إضافة رصيد بقيمة XXX ج.م إلى حسابك."
+- [x] On reject: notifies the user
+- [x] Sidebar link + route registered in the route tree
+
+## After Balance Exists (DONE)
+- [x] User returns to packages with funded balance → "اشترك الآن" opens confirmation dialog
+- [x] On confirm: deducts amount, activates package, shows "تم الاشتراك في الباقة بنجاح"
+
+## Extra UI Smoothness (DONE)
+- [x] Portal-based `Modal` component (body scroll lock, no scrollbar jump, right stacking)
+- [x] Mobile-safe layout — no horizontal scroll (`overflow-x: clip` on root/main/page-enter)
+- [x] Responsive modal max-height `92dvh` + scrollable content + `overscroll-contain`
+- [x] Faster page transition (0.38s), smoother reveal (0.55s), refined modal scale/backdrop timing
+- [x] Staggered card entrance on packages grid + trust strip
+- [x] Gold button micro-interactions (lift/scale/brightness)
+- [x] Global `img/svg/video/canvas` max-width + fluid table scrolling
+- [x] Touch-target / `touch-action: manipulation` on mobile controls
+- [x] Live counter on the home "Active investors" stat card
+
+## Verification
+- [x] `npx tsc --noEmit` — zero type errors
+- [ ] `npm run build` — final production build check
 
