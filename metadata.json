@@ -1,0 +1,6 @@
+{
+  "name": "منصة المشرق للاستثمار",
+  "description": "منصة فاخرة لمحاكاة الاستثمار والتداول في الأسواق المالية العالمية",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
